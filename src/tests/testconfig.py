@@ -5,7 +5,7 @@
 
 # LINUX
 #RID = "ASRL/dev/ttyUSB0::INSTR"
-RID = "ASRL/dev/ttyUSB1::INSTR"
+RID = "ASRL/dev/ttyACM0::INSTR"
 
 # Windows:
 #RID = "ASRL1::INSTR"   # COM1

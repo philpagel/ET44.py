@@ -26,26 +26,14 @@ test lead. This is required for some readout tests to run successfully.
 
 Run the tests
 
-    pytest ET54_test.py
+    pytest ET44_test.py
 
 If you want to record the test results – e.g. when reporting a problem or when
 confirming that this works on a model I don't have, please redirect `STDOUT` to
 a file:
 
-    pytest ET54_test.py > pytest1.log
+    pytest ET54_test.py > pytest.log
 
-## Test with power source attached
-
-Before running these tests, connect the load to a lab power supply that is set
-to 12.0V and a current limit of >1.5A. Then turn on the PSU output and run the tests:
-
-    pytest ET54_test_voltage.py
-
-If you want to record the test results – e.g. when reporting a problem or when
-confirming that this works on a model I don't have, please redirect `STDOUT` to
-a file:
-
-    pytest ET54_test_voltage.py > pytest2.log
 
 
 
