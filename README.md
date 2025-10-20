@@ -3,6 +3,8 @@
 Python class for remote controlling EastTester ET44 and ET45 series lcr meters:
 ET4401, ET4402, ET4410, ET4501, ET4502, ET4510.
 
+<img src="img/front-panel.png" width=333) />
+
 
 # Status
 
@@ -56,7 +58,7 @@ lcr.setup(
     freq=100, 
     volt=500, 
     bias=0,
-    serpar="SER", 
+    SerPar="SER", 
     speed="Slow"
     )
 
@@ -68,8 +70,6 @@ lcr.freq = 10000
 
 # measure again
 C2, ESR2 = lcr.read()
-
-
 ```
 
 
@@ -112,9 +112,9 @@ Or, on windows:
     from ET44 import ET44
     lcr = ET44("ASRL2::INSTR")
 
-Of course, you need to adapt it to the right device for your case.
-See [here](https://pyvisa.readthedocs.io/en/1.8/names.html) for details on
-pyvisa resource names.
+Of course, you need to adapt it to the right device for your case.  See
+[here](https://pyvisa.readthedocs.io/en/stable/introduction/names.html) for
+details on pyvisa resource names.
 
 
 ## basic commands
@@ -143,10 +143,9 @@ And unlock it again
     
     lcr.unlock()
 
-You can also send raw SCPI commands to the device. There are
-two different comands for that: `write` and `query`. The former will
-send a command and check the status, the latter returns the data returned by
-the device:
+You can also send raw SCPI commands to the device. There are two different
+commands for that: `write` and `query`. The former will send a command and check
+the status, the latter returns the data returned by the device:
 
     # set voltage level to 500mV:
     lcr.write("VOLT: 500")
@@ -169,6 +168,14 @@ In order to configure the device, you need to set the following paramters:
 You can set each of these parameters separately, or all at once (using the
 `setup` method).
 
+Categorical parameters are not case sensitive, so all of the following are
+equivalent:
+
+    lcr.speed = "fast"
+    lcr.speed = "Fast"
+    lcr.speed = "FAST"
+    lcr.speed = "fAsT"
+
 
 ### Primary mode
 
@@ -177,7 +184,7 @@ following modes are supported:
 
 | Mode | Description                                                           |
 |------|-----------------------------------------------------------------------|
-| AUTO | Automatically detect type fromn connected component. Not recommended. |
+| AUTO | Automatically detect type from connected component. Not recommended.  |
 | R    | Resistance                                                            |
 | C    | Capacitance                                                           |
 | L    | Inductance                                                            |
@@ -194,12 +201,16 @@ To get/set the primary mode, use the `modeA` method:
     lcr.modeA = "R"
 
     # set to capacitance
-    lcr.modeA = "r"
+    lcr.modeA = "C"
 
 **Caution:** When set to `AUTO`, you cannot set `modeB` or `SerPar` – the
 device will return an error when you try that. But that's not a big deal
-because using `Auto` mode doesn't not make much sense in a remot control
+because using `Auto` mode doesn't not make much sense in a remote control
 scenario, to begin with.
+
+`ECAP` is not really different from `C`, but it will also set defaults for
+`volt` and `bias`. So don't be surprised that they change by setting `ECAP`
+mode.
 
 
 ### Secondary mode
@@ -224,7 +235,7 @@ To get/set the secondary mode, use the `modeB` method:
     lcr.modeA = "ESR"
 
     # set to phase angle
-    lcr.modeA = "theta"
+    lcr.modeA = "Theta"
 
 
 ### Series/parallel equivalent model
@@ -234,7 +245,7 @@ So get/set the series or parallel equivalent model for measurement use the
 
 
     # print current mode
-    print(lcr.Serpar)
+    print(lcr.SerPar)
 
     # set to series
     lcr.SerPar = "Ser"
@@ -246,13 +257,15 @@ So get/set the series or parallel equivalent model for measurement use the
 ### Voltage level and bias
 
 You can set signal voltage in the range supported by your specific device.  The
-ER44xx models support 6 discrete values (100, 300, 600, 1000, 1500 and 2000V),
+ER44xx models support 7 discrete values (100, 300, 600, 1000, 1500, 2000mV),
 while the ET45xx models will accept any integer value in the range [10, 2000]mV.
 
-To get/set the voltage use the `volt` method:
+You can query the class for the supported range of the connected device:
 
     # show the voltage range supported by your device
     print(lcr._voltrange)
+
+To get/set the voltage use the `volt` method:
 
     # print signal voltage
     print(lcr.volt)
@@ -283,18 +296,19 @@ Measurement frequency can be set in a range that depends on your specific model:
 
 | Model   | Frequency Range [Hz]                               |
 |---------|----------------------------------------------------|
-| ET4401  | 100, 200, 400, 800, 1000, 2000, 4000, 8000, 10000  |
-| ET4402  | 100, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000
-| ET4410  | 100, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000, 80000, 100000 |
+| ET4401  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000  |
+| ET4402  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000
+| ET4410  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000, 80000, 100000 |
 | ET4501  | 10 – 10000                                         |
 | ET4502  | 10 – 20000                                         |
 | ET4510  | 10 – 100000                                        |
 
-In order to get/set the measurement frequency, use the `freq` method:
+You can query the class for the supported range of the connected device:
 
-    
     # show the frequency range supported by your device
     print(lcr._freqrange)
+
+In order to get/set the measurement frequency, use the `freq` method:
    
     # print frequency
     print(lcr.freq)
@@ -308,7 +322,7 @@ In order to get/set the measurement frequency, use the `freq` method:
 ### Measurement Speed
 
 To get/set the measurement speed, use the `speed` method. Valid modes are `FAST`,
-`MED` and `Slow`:
+`MEDIUM` and `Slow`:
 
     # print current mode
     print(lcr.speed)
@@ -317,13 +331,16 @@ To get/set the measurement speed, use the `speed` method. Valid modes are `FAST`
     lcr.speed = "slow"
 
     # set to fast
-    lcr.speed = "FasT"
+    lcr.speed = "Fast"
 
 Speed is inversely correlated with accuracy. So unless you are in a hurry,
 `slow` mode is recommended.
 
 
-### Relative (Dev) mode
+### Relative (Δ null) mode
+
+The manual calls this mode *Δ* or *null*, the SCPI manual calls it *dev* mode.
+However, I think *relative mode* is more common so that's what I'm calling it.
 
 By activating relative mode, the instrument will display/return relative
 measurements with respect to the value measured at the time *rel* mode was
@@ -369,7 +386,7 @@ E.g.
         freq=100, 
         volt=500, 
         bias=0,
-        serpar="SER", 
+        SerPar="SER", 
         speed="FAST"
         )
     
@@ -377,7 +394,7 @@ E.g.
     lcr.setup(
         modeA="C", 
         modeB="Q", 
-        serpar="SER", 
+        SerPar="SER", 
         freq=100, 
         speed="FAST"
         volt=500, 
@@ -391,14 +408,16 @@ E.g.
     lcr.setup(speed="slow")
 
 The `setup` method does not include *rel* mode. This is on purpose, as you
-probably want to configure the divice first, then connect the DUT and allow the
-measurement value to settle before activtin *rel* mode.
+probably want to configure the device first, then connect the DUT and allow the
+measurement value to settle before activating *rel* mode. Sorry for the
+inconvenience.
 
 
 ## Reading values
 
 After setup, you can start reading measurement values from the device using the
-`read` method. `read` is a function and returns a tuple of two floating point values:
+`read` method. `read` is a function and returns a tuple of two floating point
+values:
 
 * Value of primary parameter (defined by `modeA`)
 * Value of secondary parameter (defined by `modeB`)
@@ -415,15 +434,10 @@ Example:
 
 # Trouble shooting
 
-The SCPI implementation in the instrument is a bit wonky. I spent a lot of time
-figuring out some peculiarities and have managed to fully crash the controller
-many times. Many of these problems had to do with timing (some commands are
-fast, others require some time before you may send a new command). The SCPI
-documentation by the manufacturer is a bit obscure and incomplete in some places.
-
-It is quite possible that different models and/or firmware or hardware
-revisions behave slightly different than my instrument. If you encounter
-problems, you can try tweaking a few parameters:
+All communication parameters were derived from the way my ET4410 behaves.  It
+is quite possible that different models and/or firmware or hardware revisions
+behave differently. If you encounter problems, you can try tweaking a few
+parameters:
 
 | parameter  | Description                                               |
 |----------  |---------------------------------------------------------  |
