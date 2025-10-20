@@ -5,6 +5,8 @@ ET4401, ET4402, ET4410, ET4501, ET4502, ET4510.
 
 <img src="img/front-panel.png" width=333) />
 
+Sending raw SCPI commands to a device is cumbersome, so this class wraps all that into
+a more approachable interface.
 
 # Status
 
@@ -12,6 +14,12 @@ ET4401, ET4402, ET4410, ET4501, ET4502, ET4510.
 
 This should work fine with all devices of the ET44/ET45 series as listed above.
 However, I only have a ET4410 and no way of testing this on the other devices.
+
+I have seen differently branded devices that look pretty much identical – e.g.
+*Mustool* or *RuoShui* (models 4090A/B/C* and 4091A/B/C). If they really are
+just rebranded, they should also work.  However, they probably return a
+different identity string preventing them to be recognized. So if you have one
+of those, please get in touch.
 
 
 | Feature                       | Status |
@@ -263,7 +271,7 @@ while the ET45xx models will accept any integer value in the range [10, 2000]mV.
 You can query the class for the supported range of the connected device:
 
     # show the voltage range supported by your device
-    print(lcr._voltrange)
+    print(lcr.voltrange)
 
 To get/set the voltage use the `volt` method:
 
@@ -306,7 +314,7 @@ Measurement frequency can be set in a range that depends on your specific model:
 You can query the class for the supported range of the connected device:
 
     # show the frequency range supported by your device
-    print(lcr._freqrange)
+    print(lcr.freqrange)
 
 In order to get/set the measurement frequency, use the `freq` method:
    
@@ -443,14 +451,18 @@ parameters:
 |----------  |---------------------------------------------------------  |
 | `baudrate` | must match baudrate set in device (default: 9600)         |
 | `eol_r`    | line terminator for reading from device (default: "\r\n") |
-| `eol_w`    | line terminator for writing to device (default: "\n")     |
+| `eol_w`    | line terminator for writing to device (default: "\r\n")     |
 | `delay`    | delay after read/write operation [s] (default: 0.0)       |
-| `timeout`  | timeout [ms] before giving up on `read` requests (default: 1000) |
+| `timeout`  | timeout [ms] before giving up on `read` requests (default: 2000) |
 
 
 Example:
 
-    el = EZ44("ASRL/dev/ttyACM0", delay=0.5, baudrate=14400)
+    lcr = EZ44("ASRL/dev/ttyACM0", delay=0.5, baudrate=14400)
+
+You can also try talking to the deive directly with a terminal programm. E.g. `tio`:
+
+    tio --input-mode line -e -b 9600 -m ONLCRNL /dev/ttyACM0
 
 
 # Contributing

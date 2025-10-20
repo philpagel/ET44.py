@@ -15,6 +15,7 @@ class ET44:
         "ET4502": range(10, 20000),
         "ET4510": range(10, 100000),
     }
+    freqrange = None    # set upon initialisation
     # supported voltage levels [mV]
     _voltrange = {
         "ET4401": (100, 300, 600, 1000, 1500, 2000),
@@ -24,13 +25,14 @@ class ET44:
         "ET4502": range(10, 2000),
         "ET4510": range(10, 2000),
     }
+    voltrange = None    # set upon initialisation
 
     def __init__(
         self,
         RID,
         baudrate=9600,
         eol_r="\r\n",
-        eol_w="\n",
+        eol_w="\r\n",
         delay=0,
         timeout=2000,
     ):
@@ -95,7 +97,7 @@ bias:           {self.bias}
 """
 
     def write(self, command):
-        "Write command to connection and check status"
+        "Write SCPI command to connection and check status"
 
         ret = self.connection.query(command)
         time.sleep(self.connection.query_delay)
@@ -111,7 +113,7 @@ bias:           {self.bias}
             )
 
     def query(self, command, nrows=1, timeout=None):
-        """Write command to connection and return answer value
+        """Write SCPI command to connection and return answer value
         By default, reads 1 line of response.
         If you expect more, you need to set `nrows` to the respective value
         If you expect the respinse to be slow, you can set a ne timout just for
@@ -144,15 +146,15 @@ bias:           {self.bias}
     # Basics
 
     def beep(self):
-        "Beep"
+        "Sound a beep"
         self.write("SYST:BEEP")
 
     def trig(self):
-        "Send trigger"
+        "Send trigger event"
         self.write("*TRG")
 
     def identify(self):
-        "Request identification"
+        "Return instrument identification data"
         return self.query("*IDN?")
 
     ############################################################
@@ -163,7 +165,7 @@ bias:           {self.bias}
         self.write("SYST:REMote")
 
     def unlock(self):
-        "Unlock keybpard"
+        "Unlock keyboard"
         self.write("SYST:LOCAL")
 
     ############################################################
@@ -179,7 +181,7 @@ bias:           {self.bias}
         SerPar=None,
         speed=None,
     ):
-        "Quick setup"
+        "Quick setup method"
 
         if modeA != None:
             self.modeA = modeA
@@ -198,7 +200,7 @@ bias:           {self.bias}
 
     @property
     def modeA(self):
-        "mode (AUTO|R|C|L|Z|DCR|ECAP)"
+        "Primary mode (AUTO | R | C | L | Z | DCR | ECAP)"
         return self.query(f"FUNC:IMP:A?")
 
     @modeA.setter
@@ -220,7 +222,7 @@ bias:           {self.bias}
 
     @property
     def modeB(self):
-        "mode (X|D|Q|THETA|ESR)"
+        "Secondary mode (X | D | Q | THETA | ESR)"
 
         ret = self.query(f"FUNC:IMP:B?")
         return "THETA" if ret == "THR" else ret
@@ -243,7 +245,7 @@ bias:           {self.bias}
 
     @property
     def SerPar(self):
-        "mode (SER|PAR)"
+        "Equivalent model mode (SER | PAR)"
         mode = self.query(f"FUNC:IMP:EQU?").upper()
         match mode:
             case "SERIAL":
@@ -267,8 +269,9 @@ bias:           {self.bias}
 
     @property
     def speed(self):
-        """speed (FAST|MEDIUM|SLOW)
-        corresponds to 2, 4 or 8 samples/second
+        """Speed (FAST | MEDIUM | SLOW)
+        Corresponds to 2, 4 or 8 samples/second, respectively.
+        Slower = better accuracy
         """
     
         return self.query(f"APERture?").upper()
@@ -288,7 +291,7 @@ bias:           {self.bias}
 
     @property
     def volt(self):
-        "measurement voltage [mV]"
+        "Voltage level [mV] for measurement"
         return float(self.query(f"VOLT?"))
 
     @volt.setter
@@ -301,7 +304,9 @@ bias:           {self.bias}
 
     @property
     def bias(self):
-        "voltage bias [mV] (0 – 1500)"
+        """DC voltage bias [mV] (0 – 1500)
+        aka DC offset
+        """
         return float(self.query(f"BIAS:VOLT?"))
 
     @bias.setter
@@ -318,7 +323,7 @@ bias:           {self.bias}
 
     @property
     def freq(self):
-        "measurement frequency [Hz]"
+        "Measurement frequency [Hz]"
         return float(self.query(f"FREQ?"))
 
     @freq.setter
@@ -333,7 +338,7 @@ bias:           {self.bias}
 
     @property
     def rel(self):
-        "Relative (dev) mode"
+        "Relative (delta/dev) mode (ON | OFF)"
         return self.query(f"FUNC:DEV:MODE?").upper()
 
     @rel.setter
@@ -401,7 +406,7 @@ bias:           {self.bias}
 
     @property
     def display(self):
-        "Display page"
+        "Switch display page (COMP | MEAS | SYS)"
         ret = self.query(f"DISP:PAGE?").upper()
         match ret:
             case "COMPSET":
@@ -427,7 +432,7 @@ bias:           {self.bias}
     # Read measurements
 
     def read(self):
-        "read values"
+        "Return measurement values (primary, secondary)"
 
         A, B = self.query("FETCH?").split(",")
         return (float(A), float(B))
