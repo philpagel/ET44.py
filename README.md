@@ -304,16 +304,16 @@ measurement. Use the `bias` method to get/set the DC bias:
 
 Measurement frequency can be set in a range that depends on your specific model:
 
-| Model   | Frequency Range [Hz]                               |
-|---------|----------------------------------------------------|
-| ET4401  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000  |
-| ET4402  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000
-| ET4410  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000, 80000, 100000 |
-| ET4501  | 10 – 10000                                         |
-| ET4502  | 10 – 20000                                         |
-| ET4510  | 10 – 100000                                        |
-
-You can query the class for the supported range of the connected device:
+| Model          | Frequency Range [Hz]                               |
+|----------------|----------------------------------------------------|
+| ET4401 / 4090A  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000  |
+| ET4402 / 4090B  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000
+| ET4410 / 4090C  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000, 80000, 100000 |
+| ET4501 / 4091A  | 10 – 10000                                         |
+| ET4502 / 4091B  | 10 – 20000                                         |
+| ET4510 / 4091C  | 10 – 100000                                        |
+         
+You can  query the class for the supported range of the connected device:
 
     # show the frequency range supported by your device
     print(lcr.freqrange)
