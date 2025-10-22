@@ -35,6 +35,7 @@ class ET44:
         eol_w="\r\n",
         delay=0,
         timeout=2000,
+        model=None,
     ):
         """
         RID         pyvisa resource ID
@@ -64,6 +65,10 @@ class ET44:
             ) = [x.strip() for x in tmp]
         else:
             raise RuntimeError(f"Unable to parse device identification: '{tmp}'")
+
+        # override mdoel string
+        if model:
+            self.idn["model"] = model
 
         if self.idn["model"].upper() not in (
             "ET4401",
