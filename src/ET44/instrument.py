@@ -14,6 +14,12 @@ class ET44:
         "ET4501": range(10, 10000),
         "ET4502": range(10, 20000),
         "ET4510": range(10, 100000),
+        "RuoShui 4090A": (100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000),
+        "RuoShui 4090B": (100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000),
+        "RuoShui 4090C": ( 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000, 40000, 80000, 100000,),
+        "RuoShui 4091A": range(10, 10000),
+        "RuoShui 4091B": range(10, 20000),
+        "RuoShui 4091C": range(10, 100000),
     }
     freqrange = None    # set upon initialisation
     # supported voltage levels [mV]
@@ -24,6 +30,12 @@ class ET44:
         "ET4501": range(10, 2000),
         "ET4502": range(10, 2000),
         "ET4510": range(10, 2000),
+        "RuoShui 4090A": (100, 300, 600, 1000, 1500, 2000),
+        "RuoShui 4090B": (100, 300, 600, 1000, 1500, 2000),
+        "RuoShui 4090C": (100, 300, 600, 1000, 1500, 2000),
+        "RuoShui 4091A": range(10, 2000),
+        "RuoShui 4091B": range(10, 2000),
+        "RuoShui 4091C": range(10, 2000),
     }
     voltrange = None    # set upon initialisation
 
@@ -72,6 +84,12 @@ class ET44:
             "ET4501",
             "ET4502",
             "ET4510",
+            "RuoShui 4090A",
+            "RuoShui 4090B",
+            "RuoShui 4090C",
+            "RuoShui 4091A",
+            "RuoShui 4091B",
+            "RuoShui 4091C",
         ):
             raise RuntimeError(f"Instrument ID '{self.idn['model']}' not supported.")
         self.freqrange = ET44._freqrange[self.idn["model"]]

@@ -3,10 +3,13 @@
 Python class for remote controlling EastTester ET44 and ET45 series lcr meters:
 ET4401, ET4402, ET4410, ET4501, ET4502, ET4510.
 
+Should also work with RuoShui 4090A, 4090B, 4090C, 4091A, 4091B and 4091C branded 
+devices. 
+
 <img src="img/front-panel.png" width=333) />
 
-Sending raw SCPI commands to a device is cumbersome, so this class wraps all that into
-a more approachable interface.
+Sending raw SCPI commands to a device is cumbersome, so this class wraps all
+that into a more approachable interface.
 
 # Status
 
@@ -16,10 +19,9 @@ This should work fine with all devices of the ET44/ET45 series as listed above.
 However, I only have a ET4410 and no way of testing this on the other devices.
 
 I have seen differently branded devices that look pretty much identical – e.g.
-*Mustool* or *RuoShui* (models 4090A/B/C* and 4091A/B/C). If they really are
-just rebranded, they should also work.  However, they probably return a
-different identity string preventing them to be recognized. So if you have one
-of those, please get in touch.
+*Mustool*. If they really are just rebranded, they should also work.  However,
+they probably return a different identity string preventing them to be
+recognized. So if you have one of those, please get in touch.
 
 
 | Feature                       | Status |
@@ -302,16 +304,16 @@ measurement. Use the `bias` method to get/set the DC bias:
 
 Measurement frequency can be set in a range that depends on your specific model:
 
-| Model   | Frequency Range [Hz]                               |
-|---------|----------------------------------------------------|
-| ET4401  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000  |
-| ET4402  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000
-| ET4410  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000, 80000, 100000 |
-| ET4501  | 10 – 10000                                         |
-| ET4502  | 10 – 20000                                         |
-| ET4510  | 10 – 100000                                        |
-
-You can query the class for the supported range of the connected device:
+| Model           | Frequency Range [Hz]                               |
+|---------------- |----------------------------------------------------|
+| ET4401 / 4090A  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000 |
+| ET4402 / 4090B  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000 |
+| ET4410 / 4090C  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000, 40000, 50000, 80000, 100000 |
+| ET4501 / 4091A  | 10 – 10000                                         |
+| ET4502 / 4091B  | 10 – 20000                                         |
+| ET4510 / 4091C  | 10 – 100000                                        |
+         
+You can  query the class for the supported range of the connected device:
 
     # show the frequency range supported by your device
     print(lcr.freqrange)
