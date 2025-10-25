@@ -6,6 +6,7 @@ Saves and plots all measurement data
 """
 
 import argparse, time
+from decimal import Decimal
 from ET44 import ET44
 from plotnine import (
     ggplot,
@@ -18,12 +19,13 @@ from plotnine import (
 )
 from pandas import DataFrame
 
+
 def main():
     args = getargs()
     dat = measure(args)
     dat = DataFrame(dat, columns=(["f", args.modeA] + args.modeB))
     dat.to_csv(f"{args.output}.csv", index=False)
-    plot(dat, args)
+    plot_all(dat, args)
 
 
 def measure(args):
@@ -44,17 +46,17 @@ def measure(args):
     )
 
     dat = []
-    # range for continuous freqranges
-    if len(lcr.freqrange)>20:
-        freqrange = ( 
-                     [10, 15, 30, 50, 80] + 
-                     [100, 150, 300, 500, 800] + 
-                     [1000, 1500, 3000, 5000, 8000, 10000]
-                     )
-        if max(freqrange)>10000:
+    # continuous freqranges
+    if len(lcr.freqrange) > 20:
+        freqrange = (
+            [10, 15, 20, 30, 50, 80]
+            + [100, 150, 200, 300, 500, 800]
+            + [1000, 1500, 2000, 3000, 5000, 8000, 10000]
+        )
+        if max(freqrange) > 10000:
             freqrange += [15000, 20000]
-        if max(freqrange)>20000:
-            freqrange += [50000, 80000, 100000]
+        if max(freqrange) > 20000:
+            freqrange += [30000, 50000, 80000, 100000]
     else:
         freqrange = lcr.freqrange
 
@@ -68,31 +70,81 @@ def measure(args):
             row.append(B)
         else:
             A, B = lcr.read()
-        dat.append([freq/1000, A] + row)
+        dat.append([freq / 1000, A] + row)
     return dat
 
 
-def plot(dat, args):
-    "Plot the data"
+def plot_all(dat, args):
+    "Plot all data"
+
+    units = {
+        "L": "H",
+        "C": "F",
+        "R": "Ω",
+        "X": "Ω",
+        "Z": "Ω",
+        "X": "Ω",
+        "D": "",
+        "Q": "",
+        "Theta": "°",
+        "ESR": "Ω",
+    }
+
+    num, prefix, multiplier = to_eng(max(dat[args.modeA]))
+    dat[args.modeA] *= multiplier
+    unit = units[args.modelA]
+    if unit:
+        unit = f"[{prefix}{unit}]"
+    freqplot(dat, args.modelA, unit)
+
+    for modeB in args.modeB:
+        num, prefix, multiplier = to_eng(max(dat[args.modeB]))
+        dat[args.modeB] *= multiplier
+        unit = units[args.modelB]
+        if unit:
+            unit = f"[{prefix}{unit}]"
+        freqplot(dat, args.modelA, unit)
+
+
+def freqplot(dat, yvar, unit):
+    "Create one plot"
 
     plot = (
-        ggplot(dat, aes(x="f", y=f"{args.modeA}"))
+        ggplot(dat, aes(x="f", y=f"{modeB}"))
         + scale_x_log10()
         + geom_point(color="royalblue")
         + geom_line(color="royalblue")
-        + labs(title="Frequency Sweep", x="f [kHz]")
-    )
-    plot.save(f"{args.output}_{args.modeA}.{args.format}", dpi=args.dpi)
-    
-    for modeB in args.modeB:
-        plot = (
-            ggplot(dat, aes(x="f", y=f"{modeB}"))
-            + scale_x_log10()
-            + geom_point(color="royalblue")
-            + geom_line(color="royalblue")
-            + labs(title="Frequency Sweep", x="f [kHz]")
+        + labs(
+            title="Frequency Sweep",
+            x="f [kHz]",
+            y=f"{args.modeB} {unit}",
         )
-        plot.save(f"{args.output}_{modeB}.{args.format}", dpi=args.dpi)
+    )
+    plot.save(f"{args.output}_{modeB}.{args.format}", dpi=args.dpi)
+
+
+def to_eng(n):
+    """return number, prefix and multiplicator for engineering format
+
+    e.g.
+    to_eng(10)      # (10, "", 1)
+    to_eng(100)     # (100, "", 1)
+    to_eng(1000)    # (1.0, "k", 0.001)
+    to_eng(0.010)   # (10.0, "m", 1000)
+    to_eng(0.0001)  # (100.0, "µ", 1000000)
+    """
+
+    sign, digits, exponent = Decimal(n).as_tuple()
+    exp = len(digits) + exponent - 1
+    eng = math.floor(exp / 3)
+    mul = 10 ** (-3 * eng)
+    n = n * mul
+
+    if eng >= 0:
+        prefix = ["", "k", "M", "G", "T"][eng]
+    elif eng < 0:
+        prefix = ["", "m", "µ", "n", "p", "f"][abs(eng)]
+    return n, prefix, mul
 
 
 def getargs():
@@ -104,13 +156,11 @@ def getargs():
         epilog="",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument(
-            "modeA", choices=["L", "C", "R", "Z"], help="Primary parameter"
-    )
+    parser.add_argument("modeA", choices=["L", "C", "R", "Z"], help="Primary parameter")
     parser.add_argument(
         "modeB",
         nargs="*",
-        choices=["Q" ,"X" ,"Theta" , "D", "ESR"],
+        choices=["Q", "X", "Theta", "D", "ESR"],
         help="Secondary parameter(s)",
     )
     parser.add_argument(
@@ -146,4 +196,3 @@ def getargs():
 
 if __name__ == "__main__":
     main()
-
