@@ -230,7 +230,7 @@ The secondary mode sets the secondary parameter you want to measure. The followi
 modes are supported:
 
 | Mode  | Description                     |
-e|-------|---------------------------------|
+|-------|---------------------------------|
 | X     | Reactance                       |
 | D     | Dissipation factor              |
 | Q     | Quality factor                  |
@@ -463,7 +463,17 @@ Example:
 
     lcr = EZ44("ASRL/dev/ttyACM0", delay=0.5, baudrate=14400)
 
-You can also try talking to the deive directly with a terminal programm. E.g. `tio`:
+If you have a rebranded device, it may not be recognized because the model
+identification string is different. You can override automatic model detection by
+setting the `model` argument in the constructor method. E.g.:
+
+    lcr = EZ44("ASRL/dev/ttyACM0", model="ET4410")
+
+This will assume the device is the specified model even if the model string
+suggests otherwise.
+
+
+You can also try talking to the device directly with a terminal program. E.g. `tio`:
 
     tio --input-mode line -e -b 9600 -m ONLCRNL /dev/ttyACM0
 
