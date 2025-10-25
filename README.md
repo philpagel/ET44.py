@@ -8,8 +8,8 @@ devices.
 
 <img src="img/front-panel.png" width=333) />
 
-Sending raw SCPI commands to a device is cumbersome, so this class wraps all that into
-a more approachable interface.
+Sending raw SCPI commands to a device is cumbersome, so this class wraps all
+that into a more approachable interface.
 
 # Status
 
@@ -308,7 +308,7 @@ Measurement frequency can be set in a range that depends on your specific model:
 |----------------|----------------------------------------------------|
 | ET4401 / 4090A  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000  |
 | ET4402 / 4090B  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000
-| ET4410 / 4090C  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000, 80000, 100000 |
+| ET4410 / 4090C  | 100, 120, 200, 400, 800, 1000, 2000, 4000, 8000, 10000, 15000, 20000, 40000, 50000, 80000, 100000 |
 | ET4501 / 4091A  | 10 – 10000                                         |
 | ET4502 / 4091B  | 10 – 20000                                         |
 | ET4510 / 4091C  | 10 – 100000                                        |
