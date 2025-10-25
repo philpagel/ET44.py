@@ -167,11 +167,11 @@ the status, the latter returns the data returned by the device:
 
 ## Configuring the device
 
-In order to configure the device, you need to set the following paramters:
+In order to configure the device, you need to set the following parameters:
 
 * *modeA*: primary parameter (R | C | L | Z | DCR | ECAP | AUTO)
-* *modeB*: secondary paramter (X | D | Q | Θ | ESR)
-* *Serpar*: equivalent model (SER | PAR)
+* *modeB*: secondary parameter (X | D | Q | Θ | ESR)
+* *SerPar*: equivalent model (SER | PAR)
 * *signal voltage*
 * DC *bias* (= DC offset)
 * Measurement *speed*
@@ -230,7 +230,7 @@ The secondary mode sets the secondary parameter you want to measure. The followi
 modes are supported:
 
 | Mode  | Description                     |
-|-------|---------------------------------|
+e|-------|---------------------------------|
 | X     | Reactance                       |
 | D     | Dissipation factor              |
 | Q     | Quality factor                  |
@@ -252,7 +252,7 @@ To get/set the secondary mode, use the `modeB` method:
 ### Series/parallel equivalent model
 
 So get/set the series or parallel equivalent model for measurement use the
-`Serpar` method:
+`SerPar` method:
 
 
     # print current mode
@@ -268,7 +268,7 @@ So get/set the series or parallel equivalent model for measurement use the
 ### Voltage level and bias
 
 You can set signal voltage in the range supported by your specific device.  The
-ER44xx models support 7 discrete values (100, 300, 600, 1000, 1500, 2000mV),
+ER44xx models support 6 discrete values (100, 300, 600, 1000, 1500, 2000mV),
 while the ET45xx models will accept any integer value in the range [10, 2000]mV.
 
 You can query the class for the supported range of the connected device:

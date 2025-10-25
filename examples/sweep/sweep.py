@@ -91,12 +91,13 @@ def getargs():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "modeA", help="Primary parameter (L | C | R)"
+            "modeA", choices=["L", "C", "R", "Z"], help="Primary parameter"
     )
     parser.add_argument(
         "modeB",
         nargs="*",
-        help="Secondary parameter(s) (X | Q | X | Theta | D | ESR)",
+        choices=["Q" ,"X" ,"Theta" , "D", "ESR"],
+        help="Secondary parameter(s)",
     )
     parser.add_argument(
         "-i", "--rid", help="VISA resource ID", default="ASRL/dev/ttyACM0::INSTR"

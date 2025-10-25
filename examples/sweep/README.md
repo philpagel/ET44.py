@@ -27,14 +27,13 @@ To get usage help, use the  `-h` option:
     ❯ ./sweep.py -h
     usage: sweep [-h] [-i RID] [-s SERPAR] [-v VOLT] [-b BIAS] [-S SPEED] [-o OUTPUT]
                  [-d DPI] [-f FORMAT]
-                 modeA [modeB ...]
+                 {L,C,R,Z} [{Q,X,Theta,D,ESR} ...]
 
     Frequency sweep measurement
 
     positional arguments:
-      modeA                Primary parameter (L | C | R)
-      modeB                Secondary parameter(s) (X | Q | X | Theta | D | ESR)
-                           (default: None)
+      {L,C,R,Z}            Primary parameter
+      {Q,X,Theta,D,ESR}    Secondary parameter(s) (default: None)
 
     options:
       -h, --help           show this help message and exit
