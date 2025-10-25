@@ -11,6 +11,40 @@ devices.
 Sending raw SCPI commands to a device is cumbersome, so this class wraps all
 that into a more approachable interface.
 
+# In a Nutshell
+
+Here is a little example script that illustrates how things work:
+
+```{python}
+#!/bin/env python3
+from ET44 import ET44
+
+# connect to the device
+lcr = ET44("ASRL/dev/ttyACM0::INSTR")
+
+# configure the device
+lcr.setup(
+    modeA="C", 
+    modeB="Q", 
+    freq=100, 
+    volt=500, 
+    bias=0,
+    SerPar="SER", 
+    speed="Slow"
+    )
+
+# take a measurement
+C1, ESR1 = lcr.read()
+
+# Change the frequency to 10kHz
+lcr.freq = 10000
+
+# measure again
+C2, ESR2 = lcr.read()
+```
+
+
+
 # Status
 
 [![works on my machine badge](https://cdn.jsdelivr.net/gh/nikku/works-on-my-machine@v0.4.0/badge.svg)](https://github.com/nikku/works-on-my-machine)
@@ -48,39 +82,6 @@ Legend:
 * `✓`: Implemented and working
 * `–` : not implemented
 * `???` : Not clear if this is possible / does not work as described in SCPI manual
-
-
-# In a Nutshell
-
-Here is a little example script that illustrates how things work:
-
-```{python}
-#!/bin/env python3
-from ET44 import ET44
-
-# connect to the device
-lcr = ET44("ASRL/dev/ttyACM0::INSTR")
-
-# configure the device
-lcr.setup(
-    modeA="C", 
-    modeB="Q", 
-    freq=100, 
-    volt=500, 
-    bias=0,
-    SerPar="SER", 
-    speed="Slow"
-    )
-
-# take a measurement
-C1, ESR1 = lcr.read()
-
-# Change the frequency to 10kHz
-lcr.freq = 10000
-
-# measure again
-C2, ESR2 = lcr.read()
-```
 
 
 # Installation
