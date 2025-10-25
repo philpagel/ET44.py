@@ -44,7 +44,21 @@ def measure(args):
     )
 
     dat = []
-    for freq in lcr.freqrange:
+    # range for continuous freqranges
+    if len(lcr.freqrange)>20:
+        freqrange = ( 
+                     [10, 15, 30, 50, 80] + 
+                     [100, 150, 300, 500, 800] + 
+                     [1000, 1500, 3000, 5000, 8000, 10000]
+                     )
+        if max(freqrange)>10000:
+            freqrange += [15000, 20000]
+        if max(freqrange)>20000:
+            freqrange += [50000, 80000, 100000]
+    else:
+        freqrange = lcr.freqrange
+
+    for freq in freqrange:
         lcr.freq = freq
         time.sleep(2)  # allow instrument to settle
         row = []
