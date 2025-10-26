@@ -64,7 +64,7 @@ def measure(args):
     for freq in freqrange:
         print(".", file=sys.stderr, end="", flush=True)
         lcr.freq = freq
-        time.sleep(2)  # allow instrument to settle
+        time.sleep(args.delay)  # allow instrument to settle
         row = []
         for modeB in args.modeB:
             lcr.modeB = modeB
@@ -178,12 +178,15 @@ def getargs():
         "-S", "--speed", help="Speed (FAST | MEDIUM | SLOW)", default="slow"
     )
     parser.add_argument(
+            "-d", "--delay", type=float, help="Delay [s] after changing settings", default="2.0"
+    )
+    parser.add_argument(
         "-o",
         "--output",
         help="basename of the output files",
         default="sweep",
     )
-    parser.add_argument("-d", "--dpi", help="Image resolution", default=300, type=int)
+    parser.add_argument("-D", "--dpi", help="Image resolution", default=300, type=int)
     parser.add_argument("-f", "--format", help="Image format", default="png")
 
     return parser.parse_args()
