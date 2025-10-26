@@ -128,7 +128,7 @@ Of course, you need to adapt it to the right device for your case.  See
 details on pyvisa resource names.
 
 
-## basic commands
+## Basic commands
     
 Send a trigger event
 
@@ -268,7 +268,7 @@ So get/set the series or parallel equivalent model for measurement use the
 ### Voltage level and bias
 
 You can set signal voltage in the range supported by your specific device.  The
-ER44xx models support 6 discrete values (100, 300, 600, 1000, 1500, 2000mV),
+ET44xx models support 6 discrete values (100, 300, 600, 1000, 1500, 2000mV),
 while the ET45xx models will accept any integer value in the range [10, 2000]mV.
 
 You can query the class for the supported range of the connected device:

@@ -119,7 +119,7 @@ def freqplot(dat, yvar, unit, args):
 
 
 def to_eng(n):
-    """return number, prefix and multiplicator for engineering format
+    """return number, prefix and multiplier for engineering format
 
     e.g.
     to_eng(10)      # (10, "", 1)
