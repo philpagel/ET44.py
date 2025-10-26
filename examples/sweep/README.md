@@ -5,7 +5,7 @@ take the same measurement at different frequencies.
 
 The measurement results are saved in CSV format and as a plots.
 
-You need to specify one major mode (L, C or R). You can specify one ore more
+You need to specify one major mode (L, C, R or Z). You can specify one or more
 secondary modes (X, Q, D, Theta or ESR) if you like. All variables will be
 plotted against measurement frequency, individually.
 

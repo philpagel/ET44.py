@@ -5,7 +5,7 @@ Frequency sweep measurement
 Saves and plots all measurement data
 """
 
-import argparse, time
+import argparse, sys, time, math
 from decimal import Decimal
 from ET44 import ET44
 from plotnine import (
@@ -25,6 +25,7 @@ def main():
     dat = measure(args)
     dat = DataFrame(dat, columns=(["f", args.modeA] + args.modeB))
     dat.to_csv(f"{args.output}.csv", index=False)
+    print(dat)
     plot_all(dat, args)
 
 
@@ -61,6 +62,7 @@ def measure(args):
         freqrange = lcr.freqrange
 
     for freq in freqrange:
+        print(".", file=sys.stderr, end="", flush=True)
         lcr.freq = freq
         time.sleep(2)  # allow instrument to settle
         row = []
@@ -90,37 +92,30 @@ def plot_all(dat, args):
         "ESR": "Ω",
     }
 
-    num, prefix, multiplier = to_eng(max(dat[args.modeA]))
-    dat[args.modeA] *= multiplier
-    unit = units[args.modelA]
-    if unit:
-        unit = f"[{prefix}{unit}]"
-    freqplot(dat, args.modelA, unit)
-
-    for modeB in args.modeB:
-        num, prefix, multiplier = to_eng(max(dat[args.modeB]))
-        dat[args.modeB] *= multiplier
-        unit = units[args.modelB]
+    for mode in [args.modeA] + args.modeB:
+        num, prefix, multiplier = to_eng(max(dat[mode]))
+        dat[mode] *= multiplier
+        unit = units[mode]
         if unit:
             unit = f"[{prefix}{unit}]"
-        freqplot(dat, args.modelA, unit)
+        freqplot(dat, mode, unit, args)
 
 
-def freqplot(dat, yvar, unit):
+def freqplot(dat, yvar, unit, args):
     "Create one plot"
 
     plot = (
-        ggplot(dat, aes(x="f", y=f"{modeB}"))
+        ggplot(dat, aes(x="f", y=f"{yvar}"))
         + scale_x_log10()
         + geom_point(color="royalblue")
         + geom_line(color="royalblue")
         + labs(
             title="Frequency Sweep",
             x="f [kHz]",
-            y=f"{args.modeB} {unit}",
+            y=f"{yvar} {unit}",
         )
     )
-    plot.save(f"{args.output}_{modeB}.{args.format}", dpi=args.dpi)
+    plot.save(f"{args.output}_{yvar}.{args.format}", dpi=args.dpi)
 
 
 def to_eng(n):
