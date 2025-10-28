@@ -70,6 +70,24 @@ def test_bias(value):
         lcr.bias = 15000
         lcr.bias = 10
 
+@pytest.mark.parametrize("value", [100, 30, 100, 30])
+def test_impedance(value):
+    lcr.impedance = value
+    assert lcr.impedance == value
+
+    with pytest.raises(ValueError):
+        lcr.impedance = 50
+        lcr.impedance = 75
+
+@pytest.mark.parametrize("value", ["INT", "MAN", "EXT", "InT", "mAn", "int"])
+def test_trigger(value):
+    lcr.trigger = value
+    assert lcr.trigger == value.upper()
+
+    with pytest.raises(ValueError):
+        lcr.trigger = "FOO"
+        lcr.trigger = "MANUAL"
+
 @pytest.mark.parametrize("value", [100, 120, 400, 800, 1000])
 def test_freq(value):
     lcr.freq = value
@@ -103,17 +121,17 @@ def test_display(mode):
         lcr.display = "FOOBAR"
   
 
-@pytest.mark.parametrize("modeA, modeB, freq, volt, bias, SerPar, speed", 
+@pytest.mark.parametrize("modeA, modeB, freq, volt, bias, SerPar, speed, trigger", 
                          [
-                             ("C",   "X",      100,  1000,   0, "Ser", "Slow"),
-                             ("C",   "ESR",    120,   600, 100, "Par", "Medium"),
-                             ("L",   "Q",     1000,  2000,   0, "Ser", "Slow"),
-                             ("R",   "Theta", 4000,   300, 200, "SER", "fast"),
-                             ("DCR", "D",      400,  2000,   0, "par", "Slow"),
+                             ("C",   "X",      100,  1000,   0, "Ser", "Slow", "INt"),
+                             ("C",   "ESR",    120,   600, 100, "Par", "Medium", "EXT"),
+                             ("L",   "Q",     1000,  2000,   0, "Ser", "Slow", "MaN"),
+                             ("R",   "Theta", 4000,   300, 200, "SER", "fast", "EXT"),
+                             ("DCR", "D",      400,  2000,   0, "par", "Slow", "man"),
                          ])
-def test_setup(modeA, modeB, freq, volt, bias, SerPar, speed):
+def test_setup(modeA, modeB, freq, volt, bias, SerPar, speed, trigger):
     # ordered parameters
-    lcr.setup(modeA, modeB, freq, volt, bias, SerPar, speed)
+    lcr.setup(modeA, modeB, freq, volt, bias, SerPar, speed, trigger)
     assert lcr.modeA == modeA.upper()
     assert lcr.modeB == modeB.upper()
     assert lcr.freq == freq
@@ -121,10 +139,11 @@ def test_setup(modeA, modeB, freq, volt, bias, SerPar, speed):
     assert lcr.bias == bias
     assert lcr.SerPar == SerPar.upper()
     assert lcr.speed == speed.upper()
+    assert lcr.trigger == trigger.upper()
 
     # named parameters
     lcr.setup(modeA=modeA, modeB=modeB, freq=freq, volt=volt, bias=bias,
-              SerPar=SerPar, speed=speed)
+              SerPar=SerPar, speed=speed, trigger=trigger)
     assert lcr.modeA == modeA.upper()
     assert lcr.modeB == modeB.upper()
     assert lcr.freq == freq
@@ -132,6 +151,7 @@ def test_setup(modeA, modeB, freq, volt, bias, SerPar, speed):
     assert lcr.bias == bias
     assert lcr.SerPar == SerPar.upper()
     assert lcr.speed == speed.upper()
+    assert lcr.trigger == trigger.upper()
 
 def test_setup_missing():
     "test partial re-configuration"

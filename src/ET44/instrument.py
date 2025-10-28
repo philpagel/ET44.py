@@ -203,6 +203,7 @@ bias:           {self.bias}
         bias=None,
         SerPar=None,
         speed=None,
+        trigger=None,
     ):
         "Quick setup method"
 
@@ -220,6 +221,8 @@ bias:           {self.bias}
             self.bias = bias
         if speed != None:
             self.speed = speed
+        if trigger != None:
+            self.trigger = trigger
 
     @property
     def modeA(self):
@@ -308,7 +311,43 @@ bias:           {self.bias}
         else:
             raise ValueError(f"Speed must be in {speeds}")
     
+    @property
+    def trigger(self):
+        """Trigger mode (INT | EXT | MAN)
+        """
+    
+        return self.query(f"SYSTEM:SOURCE?").upper()
 
+    @trigger.setter
+    def trigger(self, mode):
+        mode = mode.upper()
+        modes = ("INT", "MAN", "EXT")
+        if mode in modes:
+            self.write(f"SYSTEM:SOURCE {mode}")
+        else:
+            raise ValueError(f"Mode must be in {modes}")
+
+   
+    ############################################################
+    # Output impedance
+
+    @property
+    def impedance(self):
+        "output impedance [Ω] (30 | 100)"
+        val = int(self.query(f"OUT:RES?"))
+        mapping = {1:30, 0:100}
+        return mapping[val]
+
+    @impedance.setter
+    def impedance(self, Z):
+
+        mapping = {30:1, 100:0}
+        if Z in mapping:
+            self.write(f"OUT:RES {mapping[Z]}")
+        else:
+            raise ValueError(f"Z must be in (30, 100)Ω")
+
+    
     ############################################################
     # Voltage and bias (DC offset)
 

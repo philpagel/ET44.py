@@ -43,8 +43,6 @@ lcr.freq = 10000
 C2, ESR2 = lcr.read()
 ```
 
-
-
 # Status
 
 [![works on my machine badge](https://cdn.jsdelivr.net/gh/nikku/works-on-my-machine@v0.4.0/badge.svg)](https://github.com/nikku/works-on-my-machine)
@@ -68,14 +66,15 @@ recognized. So if you have one of those, please get in touch.
 | Bias (DC offset)              |   ✓    |
 | Measurement speed             |   ✓    |
 | Relative mode                 |   ✓    |
+| Trigger source                |   ✓    |
 | Lock/unlock                   |   ✓    |
 | Display options               |   ✓    |
+| Output impedance              |   ✓    |
+| min/max/avg                   |   –    |
 | Comparator mode               |   –    |
-| Open/short calibration        |  ???   |
+| List scanning                 |   –    |
+| Open/short calibration        |   –    |
 | get/set range                 |  ???   |
-| output impedance              |  ???   |
-| List scanning                 |  ???   |
-| min/max/avg                   |  ???   |
 
 Legend:
 
@@ -348,6 +347,35 @@ Speed is inversely correlated with accuracy. So unless you are in a hurry,
 `slow` mode is recommended.
 
 
+## Output impedance
+
+These meters offer two different choices for oiutput impedance: 30Ω and 100G.
+to get/set it use the `impedance` property:
+
+    # print current output impedance
+    print(lcr.impedance)
+
+    # set outpout impedance to 100Ω
+    lcr.impedance = 100
+
+
+## Trigger source
+
+Measurements can be triggered in three ways:
+
+* automatically (`INT`)
+* externally ("EXT") via the trigger input at the back
+* manually ("MAN") by the `lcr.trig()` method
+
+To get/set the source, use the `lcr.trigger` property:
+
+    # print current trigger source
+    print(lcr.trigger)
+
+    # set trigger mode to manual
+    lcr.trigger = "MAN"
+
+
 ### Relative (Δ null) mode
 
 The manual calls this mode *Δ* or *null*, the SCPI manual calls it *dev* mode.
@@ -369,26 +397,27 @@ activated. To get/set rel mode, use the `rel` method:
 
 ### Quick setup
 
-To set all measurement parameters at once, you can use the `setup method`. The
+To set many measurement parameters at once, you can use the `setup method`. The
 function accepts all of the setup parameters in single function call and you
 can either provide them in the order `modeA, modeB, freq, voltage, bias,
-SerPar, speed` or by name. In the latter case you can omit as many parameters
-as you like – in that case they will remain unchanged.
+SerPar, speed, trigger` or by name. In the latter case you can omit as many
+parameters as you like – in that case they will remain unchanged.
 
 E.g.
     
     # Capacitance and Quality factor at 100Hz using a 0.5V signal with no bias 
     # in series mode and fast measurement
     #
-    #           ________________________________ modeA
-    #          |     ___________________________ modeB
-    #          |    |     ______________________ freq
-    #          |    |    |     _________________ volt
-    #          |    |    |    |    _____________ bias
-    #          |    |    |    |   |     ________ SerPar
-    #          |    |    |    |   |    |       _ speed
-    #          |    |    |    |   |    |      |
-    lcr.setup("C", "Q", 100, 500, 0, "SER", "FAST")
+    #           ________________________________________ modeA
+    #          |     ___________________________________ modeB
+    #          |    |     ______________________________ freq
+    #          |    |    |     _________________________ volt
+    #          |    |    |    |    _____________________ bias
+    #          |    |    |    |   |     ________________ SerPar
+    #          |    |    |    |   |    |       _________ speed
+    #          |    |    |    |   |    |      |        _ trigger source
+    #          |    |    |    |   |    |      |       |
+    lcr.setup("C", "Q", 100, 500, 0, "SER", "FAST", "INT")
     
     # the same using parameter names
     lcr.setup(
@@ -398,11 +427,13 @@ E.g.
         volt=500, 
         bias=0,
         SerPar="SER", 
-        speed="FAST"
+        speed="FAST",
+        trigger="INT",
         )
     
     # the same using parameters in a different order
     lcr.setup(
+        trigger="INT",
         modeA="C", 
         modeB="Q", 
         SerPar="SER", 
