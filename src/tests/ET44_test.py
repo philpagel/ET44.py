@@ -32,6 +32,14 @@ def test_basics():
     lcr.lock()
     lcr.unlock()
 
+@pytest.mark.parametrize("mode", ["ON", "off", "OfF", "oN"])
+def test_autorange(mode):
+    lcr.autorange = mode
+
+    with pytest.raises(ValueError):
+        lcr.autorange = "an"
+        lcr.autorange = "no"
+
 @pytest.mark.parametrize("mode", ["AUTO", "r", "C", "l", "Z", "DcR", "EcAP"])
 def test_modeA(mode):
     lcr.modeA = mode
@@ -127,7 +135,7 @@ def test_display(mode):
                              ("C",   "ESR",    120,   600, 100, "Par", "Medium", "EXT"),
                              ("L",   "Q",     1000,  2000,   0, "Ser", "Slow", "MaN"),
                              ("R",   "Theta", 4000,   300, 200, "SER", "fast", "EXT"),
-                             ("DCR", "D",      400,  2000,   0, "par", "Slow", "man"),
+                             ("DCR", "D",      400,  2000,   0, "par", "Slow", "int"),
                          ])
 def test_setup(modeA, modeB, freq, volt, bias, SerPar, speed, trigger):
     # ordered parameters
@@ -183,8 +191,6 @@ def test_setup_missing():
     assert lcr.SerPar == "PAR"
     assert lcr.speed == "SLOW"
     
-    
-
 
 def test_read():
     "only test for non.crash"

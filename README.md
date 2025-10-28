@@ -71,10 +71,10 @@ recognized. So if you have one of those, please get in touch.
 | Display options               |   ✓    |
 | Output impedance              |   ✓    |
 | Open/short calibration        |   ✓    |
+| auto range on/off             |   ✓    |
 | min/max/avg                   |   –    |
 | Comparator mode               |   –    |
 | List scanning                 |   –    |
-| get/set range                 |  ???   |
 
 Legend:
 
@@ -469,6 +469,22 @@ For *open* calibration, make sure the probes do not touch and run
 
 A countdown will appear on the device screen. Calibration takes a while. Do not
 touch the device or probes during calibration.
+
+
+## Autorange on/off
+
+The device does not support manual range setting. However, you can
+turn off auto range using the `autoange` method:
+
+    # turn odd auto range
+    lcr.autorange = "off"
+
+    # and turn it back on
+    lcr.autorange = "ON"
+
+Turning autorang eoff will freeze the current range setting for
+all further measurements.
+
 
 ## Reading values
 

@@ -418,35 +418,20 @@ bias:           {self.bias}
     # setting auto state does not
     # func:imp:range:val never works for reading/writing
 
-#    @property
-#    def range(self):
-#        "measurement range (AUTO|30|100|1000|3000|10000|30000|100000)"
-#        if self.query(f"FUNC:IMP:RANGE:AUTO?") == "ON":
-#            return "AUTO"
-#        else:
-#            return self.query(f"FUNC:IMP:RANGE:VALUE?")
-#
-#    @range.setter
-#    def range(self, range):
-#        ranges = (
-#            "AUTO",
-#            "30",
-#            "100",
-#            "300",
-#            "1000",
-#            "3000",
-#            "10000",
-#            "30000",
-#            "100000",
-#        )
-#        if range.upper() in ranges:
-#            if range.upper() == "AUTO":
-#                self.write(f"FUNC:IMP:RANGE:AUTO ON")
-#            else:
-#                self.write(f"FUNC:IMP:RANGE:AUTO OFF")
-#                self.write(f"FUNC:IMP:RANGE:VAL {range}")
-#        else:
-#            raise ValueError(f"Range must be in {ranges}")
+    @property
+    def autorange(self):
+        "auto ranging (ON | OFF)"
+        return self.query(f"FUNC:IMP:RANGE:AUTO?")
+
+    @autorange.setter
+    def autorange(self, state):
+
+        state = state.upper()
+        if state in ("ON", "OFF"):
+            self.write(f"FUNC:IMP:RANGE:AUTO {state}")
+        else:
+            raise ValueError(f"Range must be in (ON | OFF)")
+
 
     ############################################################
     # Calibration
