@@ -68,6 +68,7 @@ recognized. So if you have one of those, please get in touch.
 | Bias (DC offset)              |   ✓    |
 | Measurement speed             |   ✓    |
 | Relative mode                 |   ✓    |
+| Trigger source                |   ✓    |
 | Lock/unlock                   |   ✓    |
 | Display options               |   ✓    |
 | Comparator mode               |   –    |
@@ -348,6 +349,23 @@ Speed is inversely correlated with accuracy. So unless you are in a hurry,
 `slow` mode is recommended.
 
 
+## Trigger source
+
+Measurements can be triggered in three ways:
+
+* automatically (`INT`)
+* externally ("EXT") via the trigger input at the back
+* manually ("MAN") by the `lcr.trig()` method
+
+To get/set the source, use the `lcr.trigger` property:
+
+    # print current trigger source
+    print(lcr.trigger)
+
+    # set trigger mode to manual
+    lcr.trigger = "MAN"
+
+
 ### Relative (Δ null) mode
 
 The manual calls this mode *Δ* or *null*, the SCPI manual calls it *dev* mode.
@@ -380,15 +398,16 @@ E.g.
     # Capacitance and Quality factor at 100Hz using a 0.5V signal with no bias 
     # in series mode and fast measurement
     #
-    #           ________________________________ modeA
-    #          |     ___________________________ modeB
-    #          |    |     ______________________ freq
-    #          |    |    |     _________________ volt
-    #          |    |    |    |    _____________ bias
-    #          |    |    |    |   |     ________ SerPar
-    #          |    |    |    |   |    |       _ speed
-    #          |    |    |    |   |    |      |
-    lcr.setup("C", "Q", 100, 500, 0, "SER", "FAST")
+    #           ________________________________________ modeA
+    #          |     ___________________________________ modeB
+    #          |    |     ______________________________ freq
+    #          |    |    |     _________________________ volt
+    #          |    |    |    |    _____________________ bias
+    #          |    |    |    |   |     ________________ SerPar
+    #          |    |    |    |   |    |       _________ speed
+    #          |    |    |    |   |    |      |        _ trigger source
+    #          |    |    |    |   |    |      |       |
+    lcr.setup("C", "Q", 100, 500, 0, "SER", "FAST", "INT")
     
     # the same using parameter names
     lcr.setup(
@@ -398,11 +417,13 @@ E.g.
         volt=500, 
         bias=0,
         SerPar="SER", 
-        speed="FAST"
+        speed="FAST",
+        trigger="INT",
         )
     
     # the same using parameters in a different order
     lcr.setup(
+        trigger="INT",
         modeA="C", 
         modeB="Q", 
         SerPar="SER", 

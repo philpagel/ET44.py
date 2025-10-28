@@ -203,6 +203,7 @@ bias:           {self.bias}
         bias=None,
         SerPar=None,
         speed=None,
+        trigger=None,
     ):
         "Quick setup method"
 
@@ -220,6 +221,8 @@ bias:           {self.bias}
             self.bias = bias
         if speed != None:
             self.speed = speed
+        if trigger != None:
+            self.trigger = trigger
 
     @property
     def modeA(self):
@@ -308,7 +311,24 @@ bias:           {self.bias}
         else:
             raise ValueError(f"Speed must be in {speeds}")
     
+    @property
+    def triggger(self):
+        """Trigger mode (INT | EXT | MAN)
+        """
+    
+        return self.query(f"SYSTEM:SOURCE?").upper()
 
+    @speed.setter
+    def trigger(self, trig):
+        trig = trig.upper()
+        modes = ("INT", "MAN", "EXT")
+        if mode in modes:
+            self.write(f"SYSTEM:SOURCE {speed}")
+        else:
+            raise ValueError(f"Speed must be in {speeds}")
+
+    
+    
     ############################################################
     # Voltage and bias (DC offset)
 

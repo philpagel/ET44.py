@@ -103,17 +103,17 @@ def test_display(mode):
         lcr.display = "FOOBAR"
   
 
-@pytest.mark.parametrize("modeA, modeB, freq, volt, bias, SerPar, speed", 
+@pytest.mark.parametrize("modeA, modeB, freq, volt, bias, SerPar, speed, trig", 
                          [
-                             ("C",   "X",      100,  1000,   0, "Ser", "Slow"),
-                             ("C",   "ESR",    120,   600, 100, "Par", "Medium"),
-                             ("L",   "Q",     1000,  2000,   0, "Ser", "Slow"),
-                             ("R",   "Theta", 4000,   300, 200, "SER", "fast"),
-                             ("DCR", "D",      400,  2000,   0, "par", "Slow"),
+                             ("C",   "X",      100,  1000,   0, "Ser", "Slow", "INt"),
+                             ("C",   "ESR",    120,   600, 100, "Par", "Medium", "EXT"),
+                             ("L",   "Q",     1000,  2000,   0, "Ser", "Slow", "MaN"),
+                             ("R",   "Theta", 4000,   300, 200, "SER", "fast", "EXT"),
+                             ("DCR", "D",      400,  2000,   0, "par", "Slow", "man"),
                          ])
-def test_setup(modeA, modeB, freq, volt, bias, SerPar, speed):
+def test_setup(modeA, modeB, freq, volt, bias, SerPar, speed, trig):
     # ordered parameters
-    lcr.setup(modeA, modeB, freq, volt, bias, SerPar, speed)
+    lcr.setup(modeA, modeB, freq, volt, bias, SerPar, speedm, trigger)
     assert lcr.modeA == modeA.upper()
     assert lcr.modeB == modeB.upper()
     assert lcr.freq == freq
@@ -121,10 +121,11 @@ def test_setup(modeA, modeB, freq, volt, bias, SerPar, speed):
     assert lcr.bias == bias
     assert lcr.SerPar == SerPar.upper()
     assert lcr.speed == speed.upper()
+    assert lcr.trigger == trig.upper()
 
     # named parameters
     lcr.setup(modeA=modeA, modeB=modeB, freq=freq, volt=volt, bias=bias,
-              SerPar=SerPar, speed=speed)
+              SerPar=SerPar, speed=speed, trigger=trig)
     assert lcr.modeA == modeA.upper()
     assert lcr.modeB == modeB.upper()
     assert lcr.freq == freq
@@ -132,6 +133,7 @@ def test_setup(modeA, modeB, freq, volt, bias, SerPar, speed):
     assert lcr.bias == bias
     assert lcr.SerPar == SerPar.upper()
     assert lcr.speed == speed.upper()
+    assert lcr.trigger == trig.upper()
 
 def test_setup_missing():
     "test partial re-configuration"
