@@ -18,11 +18,6 @@ dep:
 
 
 test:
-	@echo "Please follow these steps:\n"
-	@echo "    1. edit 'src/tests/testconfig.py' so it matches your USB device"
-	@echo "    2. Turn on the device\n"
-	@echo "Hit ENTER to start the test suite"
-	@read RESPONSE
 	pytest -v src/tests/ET44_test.py
 .Phoney: test
 

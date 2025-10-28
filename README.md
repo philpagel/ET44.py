@@ -43,8 +43,6 @@ lcr.freq = 10000
 C2, ESR2 = lcr.read()
 ```
 
-
-
 # Status
 
 [![works on my machine badge](https://cdn.jsdelivr.net/gh/nikku/works-on-my-machine@v0.4.0/badge.svg)](https://github.com/nikku/works-on-my-machine)
@@ -72,11 +70,11 @@ recognized. So if you have one of those, please get in touch.
 | Lock/unlock                   |   ✓    |
 | Display options               |   ✓    |
 | Output impedance              |   ✓    |
+| min/max/avg                   |   –    |
 | Comparator mode               |   –    |
-| Open/short calibration        |  ???   |
+| List scanning                 |   –    |
+| Open/short calibration        |   –    |
 | get/set range                 |  ???   |
-| List scanning                 |  ???   |
-| min/max/avg                   |  ???   |
 
 Legend:
 

@@ -312,20 +312,20 @@ bias:           {self.bias}
             raise ValueError(f"Speed must be in {speeds}")
     
     @property
-    def triggger(self):
+    def trigger(self):
         """Trigger mode (INT | EXT | MAN)
         """
     
         return self.query(f"SYSTEM:SOURCE?").upper()
 
-    @speed.setter
-    def trigger(self, trig):
-        trig = trig.upper()
+    @trigger.setter
+    def trigger(self, mode):
+        mode = mode.upper()
         modes = ("INT", "MAN", "EXT")
         if mode in modes:
-            self.write(f"SYSTEM:SOURCE {speed}")
+            self.write(f"SYSTEM:SOURCE {mode}")
         else:
-            raise ValueError(f"Speed must be in {speeds}")
+            raise ValueError(f"Mode must be in {modes}")
 
    
     ############################################################
@@ -334,15 +334,18 @@ bias:           {self.bias}
     @property
     def impedance(self):
         "output impedance [Ω] (30 | 100)"
-        return float(self.query(f"OUT:RES?"))
+        val = int(self.query(f"OUT:RES?"))
+        mapping = {1:30, 0:100}
+        return mapping[val]
 
     @impedance.setter
     def impedance(self, Z):
 
-        if V in (100, 30):
-            self.write(f"OUT:RES {int(Z)}")
+        mapping = {30:1, 100:0}
+        if Z in mapping:
+            self.write(f"OUT:RES {mapping[Z]}")
         else:
-            raise ValueError(f"Z must be in [30, 100]Ω")
+            raise ValueError(f"Z must be in (30, 100)Ω")
 
     
     ############################################################
