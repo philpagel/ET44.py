@@ -70,10 +70,10 @@ recognized. So if you have one of those, please get in touch.
 | Lock/unlock                   |   ✓    |
 | Display options               |   ✓    |
 | Output impedance              |   ✓    |
+| Open/short calibration        |   ✓    |
 | min/max/avg                   |   –    |
 | Comparator mode               |   –    |
 | List scanning                 |   –    |
-| Open/short calibration        |   –    |
 | get/set range                 |  ???   |
 
 Legend:
@@ -454,6 +454,21 @@ probably want to configure the device first, then connect the DUT and allow the
 measurement value to settle before activating *rel* mode. Sorry for the
 inconvenience.
 
+
+## Open/short correction/calibration
+
+In order to carry out the open/short calibration routine, use the `cal` method.
+
+For *short* calibration, connect both probes together and run
+
+    lcr.cal()
+
+For *open* calibration, make sure the probes do not touch and run
+
+    lcr.cal()
+
+A countdown will appear on the device screen. Calibration takes a while. Do not
+touch the device or probes during calibration.
 
 ## Reading values
 

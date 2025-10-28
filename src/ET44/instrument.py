@@ -450,18 +450,14 @@ bias:           {self.bias}
 
     ############################################################
     # Calibration
-    # XXX: not working
 
-#    def cal(self, type):
-#        "Calibration (OPEN|SHORT)"
-#
-#        match type.upper():
-#            case "OPEN":
-#                self.connection.write("CORR:OPEN:EXEC")
-#            case "SHORT":
-#                self.connection.write("CORR:SHORT:EXEC")
-#            case _:
-#                raise ValueError(f"Type must be in (OPEN|SHORT)")
+    def cal(self):
+        """Execute open/short Calibration
+        automatically detects if probes are open or short
+        For both, this needs to be executed twice"""
+
+        self.connection.write("CORR:EXEC")
+
 
     ############################################################
     # Display switching
