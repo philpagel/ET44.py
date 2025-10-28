@@ -71,10 +71,10 @@ recognized. So if you have one of those, please get in touch.
 | Trigger source                |   ✓    |
 | Lock/unlock                   |   ✓    |
 | Display options               |   ✓    |
+| Output impedance              |   ✓    |
 | Comparator mode               |   –    |
 | Open/short calibration        |  ???   |
 | get/set range                 |  ???   |
-| output impedance              |  ???   |
 | List scanning                 |  ???   |
 | min/max/avg                   |  ???   |
 
@@ -349,6 +349,18 @@ Speed is inversely correlated with accuracy. So unless you are in a hurry,
 `slow` mode is recommended.
 
 
+## Output impedance
+
+These meters offer two different choices for oiutput impedance: 30Ω and 100G.
+to get/set it use the `impedance` property:
+
+    # print current output impedance
+    print(lcr.impedance)
+
+    # set outpout impedance to 100Ω
+    lcr.impedance = 100
+
+
 ## Trigger source
 
 Measurements can be triggered in three ways:
@@ -387,11 +399,11 @@ activated. To get/set rel mode, use the `rel` method:
 
 ### Quick setup
 
-To set all measurement parameters at once, you can use the `setup method`. The
+To set many measurement parameters at once, you can use the `setup method`. The
 function accepts all of the setup parameters in single function call and you
 can either provide them in the order `modeA, modeB, freq, voltage, bias,
-SerPar, speed` or by name. In the latter case you can omit as many parameters
-as you like – in that case they will remain unchanged.
+SerPar, speed, trigger` or by name. In the latter case you can omit as many
+parameters as you like – in that case they will remain unchanged.
 
 E.g.
     

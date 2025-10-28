@@ -327,7 +327,23 @@ bias:           {self.bias}
         else:
             raise ValueError(f"Speed must be in {speeds}")
 
-    
+   
+    ############################################################
+    # Output impedance
+
+    @property
+    def impedance(self):
+        "output impedance [Ω] (30 | 100)"
+        return float(self.query(f"OUT:RES?"))
+
+    @impedance.setter
+    def impedance(self, Z):
+
+        if V in (100, 30):
+            self.write(f"OUT:RES {int(Z)}")
+        else:
+            raise ValueError(f"Z must be in [30, 100]Ω")
+
     
     ############################################################
     # Voltage and bias (DC offset)

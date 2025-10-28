@@ -70,6 +70,24 @@ def test_bias(value):
         lcr.bias = 15000
         lcr.bias = 10
 
+@pytest.mark.parametrize("value", [100, 30, 100])
+def test_impedance(value):
+    lcr.impedance = value
+    assert lcr.impedance == value
+
+    with pytest.raises(ValueError):
+        lcr.impedance = 50
+        lcr.impedance = 75
+
+@pytest.mark.parametrize("value", ["INT", "MAN", "EXT", "InT", "mAn", "int"])
+def test_trigger(value):
+    lcr.trigger = value
+    assert lcr.trigger == value
+
+    with pytest.raises(ValueError):
+        lcr.trigger = "FOO"
+        lcr.trigger = "MANUAL"
+
 @pytest.mark.parametrize("value", [100, 120, 400, 800, 1000])
 def test_freq(value):
     lcr.freq = value
