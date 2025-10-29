@@ -128,68 +128,6 @@ def test_display(mode):
     with pytest.raises(ValueError):
         lcr.display = "FOOBAR"
   
-
-@pytest.mark.parametrize("modeA, modeB, freq, volt, bias, SerPar, speed, trigger", 
-                         [
-                             ("C",   "X",      100,  1000,   0, "Ser", "Slow", "INt"),
-                             ("C",   "ESR",    120,   600, 100, "Par", "Medium", "EXT"),
-                             ("L",   "Q",     1000,  2000,   0, "Ser", "Slow", "MaN"),
-                             ("R",   "Theta", 4000,   300, 200, "SER", "fast", "EXT"),
-                             ("DCR", "D",      400,  2000,   0, "par", "Slow", "int"),
-                         ])
-def test_setup(modeA, modeB, freq, volt, bias, SerPar, speed, trigger):
-    # ordered parameters
-    lcr.setup(modeA, modeB, freq, volt, bias, SerPar, speed, trigger)
-    assert lcr.modeA == modeA.upper()
-    assert lcr.modeB == modeB.upper()
-    assert lcr.freq == freq
-    assert lcr.volt == volt
-    assert lcr.bias == bias
-    assert lcr.SerPar == SerPar.upper()
-    assert lcr.speed == speed.upper()
-    assert lcr.trigger == trigger.upper()
-
-    # named parameters
-    lcr.setup(modeA=modeA, modeB=modeB, freq=freq, volt=volt, bias=bias,
-              SerPar=SerPar, speed=speed, trigger=trigger)
-    assert lcr.modeA == modeA.upper()
-    assert lcr.modeB == modeB.upper()
-    assert lcr.freq == freq
-    assert lcr.volt == volt
-    assert lcr.bias == bias
-    assert lcr.SerPar == SerPar.upper()
-    assert lcr.speed == speed.upper()
-    assert lcr.trigger == trigger.upper()
-
-def test_setup_missing():
-    "test partial re-configuration"
-
-    lcr.setup("C", "X", 100, 1000, 0, "Ser", "Slow")
-    assert lcr.modeA == "C"
-    assert lcr.modeB == "X"
-    assert lcr.freq == 100
-    assert lcr.volt == 1000
-    assert lcr.bias == 0
-    assert lcr.SerPar == "SER"
-    assert lcr.speed == "SLOW"
-
-    lcr.setup(SerPar="Par", freq=1000)
-    assert lcr.modeA == "C"
-    assert lcr.modeB == "X"
-    assert lcr.freq == 1000
-    assert lcr.volt == 1000
-    assert lcr.bias == 0
-    assert lcr.SerPar == "PAR"
-    assert lcr.speed == "SLOW"
-
-    lcr.setup(freq=2000, modeB="Theta", bias=500)
-    assert lcr.modeA == "C"
-    assert lcr.modeB == "THETA"
-    assert lcr.freq == 2000
-    assert lcr.volt == 1000
-    assert lcr.bias == 500
-    assert lcr.SerPar == "PAR"
-    assert lcr.speed == "SLOW"
     
 
 def test_read():

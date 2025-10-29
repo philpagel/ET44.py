@@ -194,36 +194,6 @@ bias:           {self.bias}
     ############################################################
     # measurement modes
 
-    def setup(
-        self,
-        modeA=None,
-        modeB=None,
-        freq=None,
-        volt=None,
-        bias=None,
-        SerPar=None,
-        speed=None,
-        trigger=None,
-    ):
-        "Quick setup method"
-
-        if modeA != None:
-            self.modeA = modeA
-        if modeB != None:
-            self.modeB = modeB
-        if SerPar != None:
-            self.SerPar = SerPar
-        if freq != None:
-            self.freq = freq
-        if volt != None:
-            self.volt = volt
-        if bias != None:
-            self.bias = bias
-        if speed != None:
-            self.speed = speed
-        if trigger != None:
-            self.trigger = trigger
-
     @property
     def modeA(self):
         "Primary mode (AUTO | R | C | L | Z | DCR | ECAP)"
@@ -412,11 +382,7 @@ bias:           {self.bias}
             raise ValueError(f"mode must be in [ON | OFF]")
 
     ############################################################
-    # Range
-    # XXX: commented out because non-functional
-    # querying auto state works
-    # setting auto state does not
-    # func:imp:range:val never works for reading/writing
+    # auto range
 
     @property
     def autorange(self):

@@ -23,15 +23,16 @@ from ET44 import ET44
 lcr = ET44("ASRL/dev/ttyACM0::INSTR")
 
 # configure the device
-lcr.setup(
-    modeA="C", 
-    modeB="Q", 
-    freq=100, 
-    volt=500, 
-    bias=0,
-    SerPar="SER", 
-    speed="Slow"
-    )
+lcr.modeA="C" 
+lcr.modeB="Q" 
+lcr.freq=100 
+lcr.volt=500 
+lcr.bias=0
+lcr.SerPar="SER" 
+lcr.speed="Slow"
+lcr.trigger = "int"
+lcr.rel = "off"
+lcr.impedance = 100
 
 # take a measurement
 C1, ESR1 = lcr.read()
@@ -85,15 +86,15 @@ Legend:
 
 # Installation
 
-1. Download the latest release package (` et44-XXX.tar.gz `) from github.
-2. If you want to install in a virtual environment, first, create and activate it:
+1. If you want to install in a virtual environment, first, create and activate it:
 ```
 python -m venv .venv
 source .venv/bin/activate
 ```
-3. Install the package (replace *XXX* with the correct number)
+
+2. Install the package
 ```
-python -m pip install et44-XXX.tar.gz
+python -m pip install https://github.com/philpagel/ET44.py/releases/latest/download/et44.tar.gz
 ```
 
 
@@ -349,7 +350,7 @@ Speed is inversely correlated with accuracy. So unless you are in a hurry,
 
 ## Output impedance
 
-These meters offer two different choices for oiutput impedance: 30Ω and 100G.
+These meters offer two different choices for oiutput impedance: 30Ω and 100Ω.
 to get/set it use the `impedance` property:
 
     # print current output impedance
@@ -393,66 +394,6 @@ activated. To get/set rel mode, use the `rel` method:
 
     # return to normal mode
     lcr.rel = "off"
-
-
-### Quick setup
-
-To set many measurement parameters at once, you can use the `setup method`. The
-function accepts all of the setup parameters in single function call and you
-can either provide them in the order `modeA, modeB, freq, voltage, bias,
-SerPar, speed, trigger` or by name. In the latter case you can omit as many
-parameters as you like – in that case they will remain unchanged.
-
-E.g.
-    
-    # Capacitance and Quality factor at 100Hz using a 0.5V signal with no bias 
-    # in series mode and fast measurement
-    #
-    #           ________________________________________ modeA
-    #          |     ___________________________________ modeB
-    #          |    |     ______________________________ freq
-    #          |    |    |     _________________________ volt
-    #          |    |    |    |    _____________________ bias
-    #          |    |    |    |   |     ________________ SerPar
-    #          |    |    |    |   |    |       _________ speed
-    #          |    |    |    |   |    |      |        _ trigger source
-    #          |    |    |    |   |    |      |       |
-    lcr.setup("C", "Q", 100, 500, 0, "SER", "FAST", "INT")
-    
-    # the same using parameter names
-    lcr.setup(
-        modeA="C", 
-        modeB="Q", 
-        freq=100, 
-        volt=500, 
-        bias=0,
-        SerPar="SER", 
-        speed="FAST",
-        trigger="INT",
-        )
-    
-    # the same using parameters in a different order
-    lcr.setup(
-        trigger="INT",
-        modeA="C", 
-        modeB="Q", 
-        SerPar="SER", 
-        freq=100, 
-        speed="FAST"
-        volt=500, 
-        bias=0,
-        )
-
-    # Now change voltage and bias
-    lcr.setup(volt=1000, bias=500)
-
-    # Now measure in slow mode
-    lcr.setup(speed="slow")
-
-The `setup` method does not include *rel* mode. This is on purpose, as you
-probably want to configure the device first, then connect the DUT and allow the
-measurement value to settle before activating *rel* mode. Sorry for the
-inconvenience.
 
 
 ## Open/short correction/calibration

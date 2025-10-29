@@ -1,5 +1,3 @@
-RELEASE="0.1"
-
 help:
 	@echo "The following make targets are available:\n"
 	@echo "   dep          install dependencies (requirements)"
@@ -11,35 +9,18 @@ help:
 	@echo "   clean        clean up package and cruft"
 .PHONEY: help
 
-
 dep:
 	python3 -m pip install -r requirements.txt
 .PHONEY: dep
 
-
 test:
 	pytest -v src/tests/ET44_test.py
-.Phoney: test
+.PHONEY: test
 
-
-dep-dev:
-	python3 -m pip install -r requirements-dev.txt --upgrade
-.PHONEY: dep-dev
 
 build: 
 	python3 -m build
 .PHONEY: build
-
-
-install: 
-	python3 -m pip install dist/et44-$(RELEASE).tar.gz
-.PHONEY: install
-
-
-pypi:
-	twine upload dist/*
-.PHONEY: pypi
-
 
 clean:
 	rm -rf dist
