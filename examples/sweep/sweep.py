@@ -114,9 +114,9 @@ def freqplot(dat, yvar, unit, args):
             y=f"{yvar} {unit}",
         )
     )
-    if "x" in args.log:
+    if args.logX:
         p += scale_x_log10()
-    if "y" in args.log:
+    if args.logY:
         p += scale_y_log10()
     plot.save(f"{args.output}_{yvar}.{args.format}", dpi=args.dpi)
 
@@ -183,9 +183,8 @@ def getargs():
     parser.add_argument(
             "-d", "--delay", type=float, help="Delay [s] after changing settings", default="2.0"
     )
-    parser.add_argument(
-            "-l", "--log", choices=("x", "y", "xy", ""), help="logarithmix axes", default="x"
-    )
+    parser.add_argument( "--logX", help="logarithmic x-axis", action='store_true')
+    parser.add_argument( "--logY", help="logarithmic y-axis", action='store_true')
     parser.add_argument(
         "-o",
         "--output",

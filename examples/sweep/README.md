@@ -26,7 +26,7 @@ To get usage help, use the  `-h` option:
 
     ❯ ./sweep.py -h
     usage: sweep [-h] [-i RID] [-s SERPAR] [-v VOLT] [-b BIAS] [-S SPEED] [-d DELAY]
-                 [-o OUTPUT] [-D DPI] [-f FORMAT]
+                 [--logX LOGX] [--logY LOGY] [-o OUTPUT] [-D DPI] [-f FORMAT]
                  {L,C,R,Z} [{Q,X,Theta,D,ESR} ...]
 
     Frequency sweep measurement
@@ -43,8 +43,8 @@ To get usage help, use the  `-h` option:
       -b, --bias BIAS      DC voltage bias [mV] (0 – 1500) (default: 0)
       -S, --speed SPEED    Speed (FAST | MEDIUM | SLOW) (default: slow)
       -d, --delay DELAY    Delay [s] after changing settings (default: 2.0)
-      -l, --log {x,y,xy,yx}
-                           logarithmix axes (default: x)
+      --logX LOGX          logarithmic x-axis (default: None)
+      --logY LOGY          logarithmic y-axis (default: None)
       -o, --output OUTPUT  basename of the output files (default: sweep)
       -D, --dpi DPI        Image resolution (default: 300)
       -f, --format FORMAT  Image format (default: png)
@@ -87,7 +87,7 @@ And here are the plots:
 
 Again, but his time with 500mV bias and a logarithmic x axis:
     
-    ./sweep.py -b 500 -l x C ESR
+    ./sweep.py -b 500 --logX C ESR
 
 <img src="img/sweep2_C.png" width=500) />
 <img src="img/sweep2_ESR.png" width=500) />
