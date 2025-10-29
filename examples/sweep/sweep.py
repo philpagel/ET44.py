@@ -16,6 +16,7 @@ from plotnine import (
     geom_line,
     geom_smooth,
     scale_x_log10,
+    scale_y_log10,
 )
 from pandas import DataFrame
 
@@ -25,7 +26,6 @@ def main():
     dat = measure(args)
     dat = DataFrame(dat, columns=(["f", args.modeA] + args.modeB))
     dat.to_csv(f"{args.output}.csv", index=False)
-    print(dat)
     plot_all(dat, args)
 
 
@@ -104,9 +104,8 @@ def plot_all(dat, args):
 def freqplot(dat, yvar, unit, args):
     "Create one plot"
 
-    plot = (
+    p = plot = (
         ggplot(dat, aes(x="f", y=f"{yvar}"))
-        + scale_x_log10()
         + geom_point(color="royalblue")
         + geom_line(color="royalblue")
         + labs(
@@ -115,6 +114,10 @@ def freqplot(dat, yvar, unit, args):
             y=f"{yvar} {unit}",
         )
     )
+    if "x" in args.log:
+        p += scale_x_log10()
+    if "y" in args.log:
+        p += scale_y_log10()
     plot.save(f"{args.output}_{yvar}.{args.format}", dpi=args.dpi)
 
 
@@ -179,6 +182,9 @@ def getargs():
     )
     parser.add_argument(
             "-d", "--delay", type=float, help="Delay [s] after changing settings", default="2.0"
+    )
+    parser.add_argument(
+            "-l", "--log", choices=("x", "y", "xy", "yx"), help="logarithmix axes", default="x"
     )
     parser.add_argument(
         "-o",

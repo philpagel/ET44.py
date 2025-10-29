@@ -43,6 +43,8 @@ To get usage help, use the  `-h` option:
       -b, --bias BIAS      DC voltage bias [mV] (0 – 1500) (default: 0)
       -S, --speed SPEED    Speed (FAST | MEDIUM | SLOW) (default: slow)
       -d, --delay DELAY    Delay [s] after changing settings (default: 2.0)
+      -l, --log {x,y,xy,yx}
+                           logarithmix axes (default: x)
       -o, --output OUTPUT  basename of the output files (default: sweep)
       -D, --dpi DPI        Image resolution (default: 300)
       -f, --format FORMAT  Image format (default: png)
