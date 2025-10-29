@@ -1,8 +1,6 @@
-# Date logger
+# Data logger
 
-Little program that will log data from the esr meter over a period of time.
-
-The measurement results are saved in CSV format and as a plots.
+Little program that will log data from the LCR meter over a period of time.
 
 ## Usage
 
@@ -33,7 +31,7 @@ The measurement results are saved in CSV format and as a plots.
 
 ### Example
 
-Let's start loging resistance every 5 seconds for an hour:
+Let's start logging resistance every 5 seconds for an hour:
 
     ❯ ./logger.py -t 1:00:00 -i 5 R
     timestamp,R
@@ -45,9 +43,12 @@ Let's start loging resistance every 5 seconds for an hour:
     2025-10-28 22:42:51.440905,2456130000.0
 
 Use shell redirection to save the data
-    ❯ ./logger.py -t 1:00:00 -i 5 R  > outfile.csv
 
+    ❯ ./logger.py -t 30:00 -i 5 R  > outfile.csv
 
+In addition with `tee` to see an write to file at the same time
+
+    ❯ ./logger.py -t 90 -i 5 R  | tee > outfile.csv
 
 
 

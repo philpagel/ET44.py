@@ -1,4 +1,4 @@
-#!/bin/env python3
+#i!/bin/env python3
 """
 Log data over time
 
@@ -42,7 +42,7 @@ def measure():
         speed=args.speed,
     )
 
-    print(",".join(["timestamp", args.modeA] + args.modeB))
+    print(",".join(["timestamp", args.modeA] + args.modeB), flush=True)
     t0 = time.time()
     while time.time() - t0 < args.time:
         Bs = []
@@ -53,7 +53,7 @@ def measure():
         else:
             A, B = lcr.read()
 
-        print(",".join([ str(x) for x in [str(datetime.datetime.now()), A]+Bs]))
+        print(",".join([ str(x) for x in [str(datetime.datetime.now()), A]+Bs]), flush=True)
         time.sleep(args.interval)
     return dat
 
