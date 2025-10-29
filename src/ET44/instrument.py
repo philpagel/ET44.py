@@ -400,6 +400,30 @@ bias:           {self.bias}
 
 
     ############################################################
+    # min/max/avg mode
+
+    @property
+    def avg(self):
+        "get/set averaging mode (MIN | MAX | AVG | OFF)"
+        return self.query(f"FUNC:COM?")
+
+    @avg.setter
+    def avg(self, state):
+
+        state = state.upper()
+        if state in ("MIN", "MAX", "AVG", "OFF"):
+            self.write(f"FUNC:COM {state}")
+        else:
+            raise ValueError(f"Range must be in (MIN | MAX | AVG | OFF)")
+
+    def read_avg(self):
+        """read value of min/max/avg
+        returns 'OFF' when not set to averaging
+        """
+
+        return self.query(f"FUNC:COMV?")
+
+    ############################################################
     # Calibration
 
     def cal(self):

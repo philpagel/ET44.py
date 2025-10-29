@@ -73,7 +73,7 @@ recognized. So if you have one of those, please get in touch.
 | Output impedance              |   ✓    |
 | Open/short calibration        |   ✓    |
 | auto range on/off             |   ✓    |
-| min/max/avg                   |   –    |
+| min/max/avg                   |   ✓    |
 | Comparator mode               |   –    |
 | List scanning                 |   –    |
 
@@ -426,6 +426,26 @@ turn off auto range using the `autoange` method:
 Turning autorang eoff will freeze the current range setting for
 all further measurements.
 
+
+## AVG/MIN/MAX mode
+
+To activate this mode, use the `avg` method. To read the resulting values,
+use `read_avg`.
+
+    # average value
+    lcr.avr = "avg"
+    print(f"{lcr.avg} value: {lcr.read_avg()}")
+
+    # minimum value
+    lcr.avg = "MIN"
+    print(f"{lcr.avg} value: {lcr.read_avg()}")
+
+    # maximum value
+    lcr.avg = "max"
+    print(f"{lcr.avg} value: {lcr.read_avg()}")
+
+    # back to normal
+    lcr.avg = "off"
 
 ## Reading values
 
