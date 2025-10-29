@@ -184,7 +184,7 @@ def getargs():
             "-d", "--delay", type=float, help="Delay [s] after changing settings", default="2.0"
     )
     parser.add_argument(
-            "-l", "--log", choices=("x", "y", "xy", "yx"), help="logarithmix axes", default="x"
+            "-l", "--log", choices=("x", "y", "xy", ""), help="logarithmix axes", default="x"
     )
     parser.add_argument(
         "-o",
