@@ -73,7 +73,7 @@ recognized. So if you have one of those, please get in touch.
 | Output impedance              |   ✓    |
 | Open/short calibration        |   ✓    |
 | auto range on/off             |   ✓    |
-| min/max/avg                   |   –    |
+| min/max/avg                   |   ✓    |
 | Comparator mode               |   –    |
 | List scanning                 |   –    |
 
@@ -348,7 +348,7 @@ Speed is inversely correlated with accuracy. So unless you are in a hurry,
 `slow` mode is recommended.
 
 
-## Output impedance
+### Output impedance
 
 These meters offer two different choices for oiutput impedance: 30Ω and 100Ω.
 to get/set it use the `impedance` property:
@@ -360,7 +360,7 @@ to get/set it use the `impedance` property:
     lcr.impedance = 100
 
 
-## Trigger source
+### Trigger source
 
 Measurements can be triggered in three ways:
 
@@ -396,6 +396,43 @@ activated. To get/set rel mode, use the `rel` method:
     lcr.rel = "off"
 
 
+### Autorange on/off
+
+The device does not support manual range setting. However, you can
+turn off auto range using the `autoange` method:
+
+    # turn odd auto range
+    lcr.autorange = "off"
+
+    # and turn it back on
+    lcr.autorange = "ON"
+
+Turning autorang eoff will freeze the current range setting for
+all further measurements.
+
+
+### AVG/MIN/MAX mode
+
+To activate this mode, use the `avg` property. To read the resulting values,
+use `read_avg()` (see balow).
+
+    # average value
+    lcr.avr = "avg"
+    print(f"{lcr.avg} value: {lcr.read_avg()}")
+
+    # minimum value
+    lcr.avg = "MIN"
+    print(f"{lcr.avg} value: {lcr.read_avg()}")
+
+    # maximum value
+    lcr.avg = "max"
+    print(f"{lcr.avg} value: {lcr.read_avg()}")
+
+    # back to normal
+    lcr.avg = "off"
+
+
+
 ## Open/short correction/calibration
 
 In order to carry out the open/short calibration routine, use the `cal` method.
@@ -410,21 +447,6 @@ For *open* calibration, make sure the probes do not touch and run
 
 A countdown will appear on the device screen. Calibration takes a while. Do not
 touch the device or probes during calibration.
-
-
-## Autorange on/off
-
-The device does not support manual range setting. However, you can
-turn off auto range using the `autoange` method:
-
-    # turn odd auto range
-    lcr.autorange = "off"
-
-    # and turn it back on
-    lcr.autorange = "ON"
-
-Turning autorang eoff will freeze the current range setting for
-all further measurements.
 
 
 ## Reading values
@@ -445,6 +467,15 @@ Example:
     # get measurement
     C, ESR = lcr.read()
 
+
+### Reading AVG/MIN/MAX values
+
+When the device is in MIN, MAX or AVG mode, you can also read the corresponding
+value:
+
+    avgValue = lcr.read_avg()
+
+If the device is not set to `min`, `max` or `avg`, the return value is `OFF`.
 
 # Trouble shooting
 

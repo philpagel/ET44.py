@@ -120,6 +120,19 @@ def test_rel():
     with pytest.raises(ValueError):
         lcr.rel = "FOOBAR"
 
+def test_avg():
+    lcr.avg = "off"
+    assert lcr.avg == "OFF"
+    lcr.avg = "MIN"
+    assert lcr.avg == "MIN"
+    lcr.avg = "MaX"
+    assert lcr.avg == "MAX"
+    lcr.avg = "oFF"
+    assert lcr.avg == "OFF"
+    assert lcr.read_avg() == "OFF"
+    lcr.avg = "avg"
+    assert lcr.read_avg() != "OFF"
+
 @pytest.mark.parametrize("mode", ["MEas", "COMP", "sys", "meaS"])
 def test_display(mode):
     lcr.display = mode
