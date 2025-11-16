@@ -33,14 +33,12 @@ def measure():
     except:
         exit(f"Connection to instrument failed")
 
-    lcr.setup(
-        modeA=args.modeA,
-        SerPar=args.SerPar,
-        volt=args.volt,
-        bias=args.bias,
-        freq=args.frequency,
-        speed=args.speed,
-    )
+    lcr.modeA = args.modeA
+    lcr.SerPar = args.SerPar
+    lcr.volt = args.volt
+    lcr.bias = args.bias
+    lcr.freq = args.frequency
+    lcr.speed = args.speed
 
     print(",".join(["timestamp", args.modeA] + args.modeB), flush=True)
     t0 = time.time()

@@ -167,17 +167,19 @@ the status, the latter returns the data returned by the device:
 
 ## Configuring the device
 
-In order to configure the device, you need to set the following parameters:
+The lcr meter features several settings that you need to configure
+to fit your measurements:
 
 * *modeA*: primary parameter (R | C | L | Z | DCR | ECAP | AUTO)
 * *modeB*: secondary parameter (X | D | Q | Θ | ESR)
-* *SerPar*: equivalent model (SER | PAR)
-* *signal voltage*
+* Measurement *frequency*
+* Signal *voltage*
 * DC *bias* (= DC offset)
+* *SerPar*: equivalent model (SER | PAR)
 * Measurement *speed*
-
-You can set each of these parameters separately, or all at once (using the
-`setup` method).
+* *Relative* measurement mode
+* Trigger source
+* Output impedance  
 
 Categorical parameters are not case sensitive, so all of the following are
 equivalent:
@@ -187,23 +189,26 @@ equivalent:
     lcr.speed = "FAST"
     lcr.speed = "fAsT"
 
+The range of valid values for *volt*, *bias* and *frequency* depend on the
+specific models. 
+
 
 ### Primary mode
 
 The primary mode sets the type of component/parameter you want to measure. The
 following modes are supported:
 
-| Mode | Description                                                           |
-|------|-----------------------------------------------------------------------|
-| AUTO | Automatically detect type from connected component. Not recommended.  |
-| R    | Resistance                                                            |
-| C    | Capacitance                                                           |
-| L    | Inductance                                                            |
-| Z    | Impedance                                                             |
-| DCR  | DC resistance                                                         |
-| ECAP | Capacitance of electrolytic capacitors                                |
+| Mode | Description                                                             |
+|------|-------------------------------------------------------------------------|
+| R    | Resistance                                                              |
+| C    | Capacitance                                                             |
+| L    | Inductance                                                              |
+| Z    | Impedance                                                               |
+| DCR  | DC resistance                                                           |
+| ECAP | Capacitance of electrolytic capacitors                                  |
+| AUTO | Automatically detect type from connected component. *Not recommended*.  |
 
-To get/set the primary mode, use the `modeA` method:
+To get/set the primary mode, use the `modeA` property:
 
     # print current mode
     print(lcr.modeA)
@@ -226,8 +231,8 @@ mode.
 
 ### Secondary mode
 
-The secondary mode sets the secondary parameter you want to measure. The following
-modes are supported:
+The secondary mode (`modeB`) gest/sets the secondary parameter you want to
+measure. The following modes are supported:
 
 | Mode  | Description                     |
 |-------|---------------------------------|
@@ -237,7 +242,7 @@ modes are supported:
 | Theta | Phase angle Θ                   |
 | ESR   | Equivalent series resistance    |
 
-To get/set the secondary mode, use the `modeB` method:
+To get/set the secondary mode, use the `modeB` property:
 
     # print current mode
     print(lcr.modeB)
@@ -252,7 +257,7 @@ To get/set the secondary mode, use the `modeB` method:
 ### Series/parallel equivalent model
 
 So get/set the series or parallel equivalent model for measurement use the
-`SerPar` method:
+`SerPar` property:
 
 
     # print current mode
@@ -276,7 +281,7 @@ You can query the class for the supported range of the connected device:
     # show the voltage range supported by your device
     print(lcr.voltrange)
 
-To get/set the voltage use the `volt` method:
+To get/set the voltage use the `volt` property:
 
     # print signal voltage
     print(lcr.volt)
@@ -289,7 +294,7 @@ To get/set the voltage use the `volt` method:
 
 A DC bias (aka DC offset) in the range [0, 1500]mV can be added to the signal –
 e.g. to ensure strictly positive voltage across the component during
-measurement. Use the `bias` method to get/set the DC bias:
+measurement. Use the `bias` property to get/set the DC bias:
 
     # print bias
     print(lcr.bias)
@@ -319,7 +324,7 @@ You can  query the class for the supported range of the connected device:
     # show the frequency range supported by your device
     print(lcr.freqrange)
 
-In order to get/set the measurement frequency, use the `freq` method:
+In order to get/set the measurement frequency, use the `freq` property:
    
     # print frequency
     print(lcr.freq)
@@ -332,7 +337,7 @@ In order to get/set the measurement frequency, use the `freq` method:
 
 ### Measurement Speed
 
-To get/set the measurement speed, use the `speed` method. Valid modes are `FAST`,
+To get/set the measurement speed, use the `speed` property. Valid modes are `FAST`,
 `MEDIUM` and `Slow`:
 
     # print current mode
@@ -384,7 +389,7 @@ However, I think *relative mode* is more common so that's what I'm calling it.
 
 By activating relative mode, the instrument will display/return relative
 measurements with respect to the value measured at the time *rel* mode was
-activated. To get/set rel mode, use the `rel` method:
+activated. To get/set rel mode, use the `rel` property:
 
     # print current mode
     print(lcr.rel)
@@ -399,7 +404,7 @@ activated. To get/set rel mode, use the `rel` method:
 ### Autorange on/off
 
 The device does not support manual range setting. However, you can
-turn off auto range using the `autoange` method:
+turn off auto range using the `autoange` property:
 
     # turn odd auto range
     lcr.autorange = "off"
@@ -452,7 +457,7 @@ touch the device or probes during calibration.
 ## Reading values
 
 After setup, you can start reading measurement values from the device using the
-`read` method. `read` is a function and returns a tuple of two floating point
+`read` method. `read` is a function and returns a tuple of *two* floating point
 values:
 
 * Value of primary parameter (defined by `modeA`)
@@ -470,12 +475,13 @@ Example:
 
 ### Reading AVG/MIN/MAX values
 
-When the device is in MIN, MAX or AVG mode, you can also read the corresponding
-value:
+When the device is in MIN, MAX or AVG mode, you can read the corresponding
+value in addition to the normal spot measurements:
 
     avgValue = lcr.read_avg()
 
 If the device is not set to `min`, `max` or `avg`, the return value is `OFF`.
+
 
 # Trouble shooting
 

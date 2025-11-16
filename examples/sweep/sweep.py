@@ -38,13 +38,11 @@ def measure(args):
     except:
         exit(f"Connection to instrument failed")
 
-    lcr.setup(
-        modeA=args.modeA,
-        SerPar=args.SerPar,
-        volt=args.volt,
-        bias=args.bias,
-        speed=args.speed,
-    )
+    lcr.modeA = args.modeA
+    lcr.SerPar = args.SerPar
+    lcr.volt = args.volt
+    lcr.bias = args.bias
+    lcr.speed = args.speed
 
     dat = []
     # continuous freqranges
