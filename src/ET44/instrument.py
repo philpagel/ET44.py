@@ -88,12 +88,12 @@ class ET44:
             "ET4501",
             "ET4502",
             "ET4510",
-            "RuoShui 4090A",
-            "RuoShui 4090B",
-            "RuoShui 4090C",
-            "RuoShui 4091A",
-            "RuoShui 4091B",
-            "RuoShui 4091C",
+            "RUOSHUI 4090A",
+            "RUOSHUI 4090B",
+            "RUOSHUI 4090C",
+            "RUOSHUI 4091A",
+            "RUOSHUI 4091B",
+            "RUOSHUI 4091C",
         ):
             raise RuntimeError(f"Instrument ID '{self.idn['model']}' not supported.")
         self.freqrange = ET44._freqrange[self.idn["model"]]
