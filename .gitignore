@@ -4,5 +4,6 @@ _material/
 __pycache__
 .pytest_cache
 .coverage
+_*/
 dist/
 *.egg-info

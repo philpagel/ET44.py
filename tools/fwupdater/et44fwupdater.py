@@ -65,6 +65,7 @@ def bootloader(dev):
     "Wait for booloader menu and select upload"
     # Upload hexfile when device is ready
 
+    logger("Waiting for bootloader")
     menucomplete = 0
     while True:
         line = dev.readline().decode("gbk").rstrip()
@@ -79,6 +80,7 @@ def bootloader(dev):
                 dev.write("1".encode("gbk"))  # select option 1: file upload
                 logger("Selecting: [1] File Upload.")
         if "准备接收文件" in line:  # "Prepare to receive file"
+            time.sleep(1)
             return
 
 
@@ -98,26 +100,34 @@ def upload(dev, hexfile):
 
     # upload file
     sent = 0
-    row = 0
-    while chunk := infile.readline():
+    rx_buffer = b""
+    while chunk := infile.read(64):
         dev.write(chunk)
         dev.flush()
-        row += 1
-        #line = dev.readline().decode("gbk").rstrip()
-#        if line != len(line) * ".": # suppress progress dots
-#            logger("\n>", line)
-#        if "空间溢出" in line:
-#            sys.exit("Device out of memory. Abort.")
-#        if "写入错误" in line:
-#            print(":", chunk)
-#            sys.exit("Write Error. Abort.")
-#        if line.startswith("***") and line.endswith("!"):
-#            sys.exit(f"Unknown Error (row {row}). Abort.")
+
+        # non-blocking read
+        if dev.in_waiting:
+            rx_buffer += dev.read(dev.in_waiting)
+
+            # process complete lines only
+            while b"\n" in rx_buffer:
+                line, rx_buffer = rx_buffer.split(b"\n", 1)
+                line = line.decode("gbk", errors="ignore").strip()
+                if line != len(line) * ".": # skip progress dots
+                    logger("\n>", line)
+                if "空间溢出" in line:
+                    sys.exit("Buffer overflow. Abort.")
+                if "写入错误" in line:
+                    sys.exit("Write error. Abort.")
+                if line.startswith("***") and line.endswith("!"):
+                    sys.exit(f"Unknown Error. Abort.")
         sent += len(chunk)
         percent = (sent / filesize) * 100
         logger(f"\rProgress: {sent}/{filesize} bytes {percent:0.0f}%", end="")
+        time.sleep(0.1)
     infile.close()
     logger()
+    #time.sleep(5)
 
     # keep reading output after upload
     while True:
