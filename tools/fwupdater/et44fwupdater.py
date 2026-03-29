@@ -14,7 +14,7 @@ def main():
             bytesize=8,
             parity="N",
             stopbits=1,
-            timeout=0.01,
+            timeout=0.1,
             xonxoff=0,
             rtscts=0,
         )
@@ -67,7 +67,7 @@ def bootloader(dev):
 
     menucomplete = 0
     while True:
-        line = dev.readline().decode("gb2312").rstrip()
+        line = dev.readline().decode("gbk").rstrip()
         if len(line) > 0:
             logger(">", line)
         if "帮助" in line:  # "Help"
@@ -76,7 +76,7 @@ def bootloader(dev):
             if args.info:
                 break
             else:
-                dev.write("1".encode("gb2312"))  # select option 1: file upload
+                dev.write("1".encode("gbk"))  # select option 1: file upload
                 logger("Selecting: [1] File Upload.")
         if "准备接收文件" in line:  # "Prepare to receive file"
             return
@@ -96,30 +96,32 @@ def upload(dev, hexfile):
     except:
         sys.exit(f"Error: cannot open hexfile '{hexfile}'")
 
+    # upload file
     sent = 0
     row = 0
     while chunk := infile.readline():
         dev.write(chunk)
         dev.flush()
-        line = dev.readline().decode("gb2312").rstrip()
         row += 1
-        if line != len(line) * ".": # suppress progress dots
-            logger("\n>", line)
-        if "空间溢出" in line:
-            sys.exit("Device out of memory. Abort.")
-        if "写入错误" in line:
-            print(":", chunk)
-            sys.exit("Write Error. Abort.")
-        if line.startswith("***") and line.endswith("!"):
-            sys.exit(f"Unknown Error (row {row}). Abort.")
+        #line = dev.readline().decode("gbk").rstrip()
+#        if line != len(line) * ".": # suppress progress dots
+#            logger("\n>", line)
+#        if "空间溢出" in line:
+#            sys.exit("Device out of memory. Abort.")
+#        if "写入错误" in line:
+#            print(":", chunk)
+#            sys.exit("Write Error. Abort.")
+#        if line.startswith("***") and line.endswith("!"):
+#            sys.exit(f"Unknown Error (row {row}). Abort.")
         sent += len(chunk)
         percent = (sent / filesize) * 100
         logger(f"\rProgress: {sent}/{filesize} bytes {percent:0.0f}%", end="")
     infile.close()
     logger()
 
+    # keep reading output after upload
     while True:
-        line = dev.readline().decode("gb2312").rstrip()
+        line = dev.readline().decode("gbk").rstrip()
         if len(line) > 0:
             logger(">", line)
         if "下载成功!" in line:  # "Download successful!"
