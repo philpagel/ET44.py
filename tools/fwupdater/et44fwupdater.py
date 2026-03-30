@@ -37,6 +37,7 @@ def trigger(dev):
 
     logger("Sending magic number. Please turn on the device now.")
 
+    dev.flush()
     # send magic nubmer until we get into bootloader menu
     magic = bytes.fromhex("1b42543936057a")
     pos = 0
@@ -63,22 +64,18 @@ def trigger(dev):
 
 def bootloader(dev):
     "Wait for booloader menu and select upload"
-    # Upload hexfile when device is ready
 
     logger("Waiting for bootloader")
     menucomplete = 0
     while True:
-        line = dev.readline().decode("gbk").rstrip()
+        line = dev.readline().decode("gbk", errors="ignore").rstrip()
         if len(line) > 0:
             logger(">", line)
         if "帮助" in line:  # "Help"
             menucomplete = 1
         if "----------------------" in line and menucomplete:
-            if args.info:
-                break
-            else:
-                dev.write("1".encode("gbk"))  # select option 1: file upload
-                logger("Selecting: [1] File Upload.")
+            dev.write("1".encode("gbk"))  # select option 1: file upload
+            logger("Selecting: [1] File Upload.")
         if "准备接收文件" in line:  # "Prepare to receive file"
             time.sleep(1)
             return
@@ -94,22 +91,18 @@ def upload(dev, hexfile):
     logger(f"Uploading '{hexfile}': {filesize} bytes")
 
     try:
-        infile = open(hexfile, "rb")
+        infile = open(hexfile, "r")
     except:
         sys.exit(f"Error: cannot open hexfile '{hexfile}'")
 
     # upload file
     sent = 0
     rx_buffer = b""
-    while chunk := infile.read(64):
-        dev.write(chunk)
+    while chunk := infile.readline():
+        dev.write(chunk.encode("ascii"))
         dev.flush()
-
-        # non-blocking read
         if dev.in_waiting:
             rx_buffer += dev.read(dev.in_waiting)
-
-            # process complete lines only
             while b"\n" in rx_buffer:
                 line, rx_buffer = rx_buffer.split(b"\n", 1)
                 line = line.decode("gbk", errors="ignore").strip()
@@ -124,14 +117,16 @@ def upload(dev, hexfile):
         sent += len(chunk)
         percent = (sent / filesize) * 100
         logger(f"\rProgress: {sent}/{filesize} bytes {percent:0.0f}%", end="")
-        time.sleep(0.1)
+        time.sleep(args.delay)
     infile.close()
+    #dev.write(b"\x04")
+    dev.flush()
     logger()
-    #time.sleep(5)
+    time.sleep(5)
 
     # keep reading output after upload
     while True:
-        line = dev.readline().decode("gbk").rstrip()
+        line = dev.readline().decode("gbk", errors="ignore").rstrip()
         if len(line) > 0:
             logger(">", line)
         if "下载成功!" in line:  # "Download successful!"
@@ -153,10 +148,7 @@ if __name__ == "__main__":
         "-s", "--serialdev", default="/dev/ttyUSB1", help="Serial device"
     )
     parser.add_argument(
-        "-i",
-        "--info",
-        action="store_true",
-        help="Show info only - do not upload anything",
+            "-d", "--delay", type=float, default=0.1, help="Delay between hexfile rows"
     )
     parser.add_argument(
         "-q", "--quiet", action="store_true", help="Run quietly without any output"
