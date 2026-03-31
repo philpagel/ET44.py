@@ -68,7 +68,7 @@ def bootloader(dev):
     logger("Waiting for bootloader")
     menucomplete = 0
     while True:
-        line = dev.readline().decode("gbk", errors="ignore").rstrip()
+        line = dev.readline().decode("gbk", errors="replace").rstrip()
         if len(line) > 0:
             logger(">", line)
         if "帮助" in line:  # "Help"
@@ -76,8 +76,7 @@ def bootloader(dev):
         if "----------------------" in line and menucomplete:
             dev.write("1".encode("gbk"))  # select option 1: file upload
             logger("Selecting: [1] File Upload.")
-        if "准备接收文件" in line:  # "Prepare to receive file"
-            time.sleep(1)
+        if "准备接收文件" in line:  # "Ready to receive file"
             return
 
 
@@ -95,38 +94,45 @@ def upload(dev, hexfile):
     except:
         sys.exit(f"Error: cannot open hexfile '{hexfile}'")
 
-    # upload file
     sent = 0
-    rx_buffer = b""
-    while chunk := infile.readline():
-        dev.write(chunk.encode("ascii"))
+    time.sleep(0.5)
+    dev.reset_input_buffer()
+    for lno, line in enumerate(infile, 1):
+        line = line.encode("ascii")
+        dev.write(line)
         dev.flush()
-        if dev.in_waiting:
-            rx_buffer += dev.read(dev.in_waiting)
-            while b"\n" in rx_buffer:
-                line, rx_buffer = rx_buffer.split(b"\n", 1)
-                line = line.decode("gbk", errors="ignore").strip()
-                if line != len(line) * ".": # skip progress dots
-                    logger("\n>", line)
-                if "空间溢出" in line:
-                    sys.exit("Buffer overflow. Abort.")
-                if "写入错误" in line:
-                    sys.exit("Write error. Abort.")
-                if line.startswith("***") and line.endswith("!"):
-                    sys.exit(f"Unknown Error. Abort.")
-        sent += len(chunk)
+        dev.reset_output_buffer()
+        sent += len(line)
         percent = (sent / filesize) * 100
         logger(f"\rProgress: {sent}/{filesize} bytes {percent:0.0f}%", end="")
-        time.sleep(args.delay)
+        time.sleep(0.01)
+
+        timeout = time.time() + 5 # timeout 5 seconds
+        while True:
+            if time.time() > timeout:
+                sys.exit("ACK timeout")
+            if dev.in_waiting:
+                x = dev.read(1)
+                if x == b".":  # ACK (".")
+                    break
+                else:
+                    msg = x + dev.readline()
+                    msg = msg.decode("gbk", errors="replace")
+                    msg = msg.rstrip()
+                logger("\n> " + msg)
+                if "空间溢出" in msg:
+                    sys.exit(f"Overflow in line: {lno}")
+                if "写入错误" in msg:
+                    sys.exit(f"Write Error in line: {lno}")
+                if msg.startswith("***") and msg.endswith("!"):
+                    sys.exit(f"Unknown Error '{msg}' in line: {lno}")
+            time.sleep(0.001)
     infile.close()
-    #dev.write(b"\x04")
-    dev.flush()
     logger()
-    time.sleep(5)
 
     # keep reading output after upload
     while True:
-        line = dev.readline().decode("gbk", errors="ignore").rstrip()
+        line = dev.readline().decode("gbk", errors="replace").rstrip()
         if len(line) > 0:
             logger(">", line)
         if "下载成功!" in line:  # "Download successful!"
@@ -146,9 +152,6 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "-s", "--serialdev", default="/dev/ttyUSB1", help="Serial device"
-    )
-    parser.add_argument(
-            "-d", "--delay", type=float, default=0.1, help="Delay between hexfile rows"
     )
     parser.add_argument(
         "-q", "--quiet", action="store_true", help="Run quietly without any output"
