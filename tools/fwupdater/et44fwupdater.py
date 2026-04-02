@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 "Firmware updater for ET44xx/ET45xx LCR meters"
 
-import time, serial, sys, os.path, argparse
+import time, serial, sys, argparse
 
 
 def main():

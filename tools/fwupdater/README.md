@@ -18,7 +18,7 @@ feedback by anyone who was brave enough to give my tool a try.
 
 * If something goes wrong, you may soft-brick your device
 * I consider the risk of hard-bricking to be almost zero because
-  sending a hexfile will preserve the bootloader any you should be able to
+  sending a hexfile will preserve the bootloader and you should be able to
   bring your device back to live using this tool or the manufacturer's tool (if
   you can get that to work).
 
@@ -41,7 +41,8 @@ feedback by anyone who was brave enough to give my tool a try.
    python3 et44fwupdater.py -s COM3 images/ET44_V6.00.2611.089.hex     # Windows 
 ```
 5. Turn *on* the meter  
-   You should see a menu in Chinese followed by a progress line.
+   The meter's screen will stay black.  
+   You should see a menu in Chinese followed by a progress line on your computer.
 6. Wait for firmware upload to finish
 7. When flash programming is done, the meter should automatically start the new
    firmware.
@@ -152,8 +153,8 @@ launch? Here are some things to check or do:
    if necessary.
 3. Double check that you are using the *correct* serial device (`COMx` port or
    `/dev/ttyUSBx`).
-4. Double-check that your cable is plugged into the RS232 Port, not the handler
-   Port, which uses the same physical socket.
+4. Double-check that your cable is plugged into the RS232 port, not the handler
+   port, which uses the same physical socket.
 5. Try again, several times if necessary.
     - Turn off the meter
     - Kill the updater program
@@ -161,7 +162,7 @@ launch? Here are some things to check or do:
 6. When turning the device on, do so swiftly. Sometimes when pressing the power
    button too slowly, triggering the bootloader fails.
 7. Reset everything:
-    - Unplug the RS232 Cable from the computer. 
+    - Unplug the RS232 cable from the computer. 
     - Maybe even reboot the computer.
     - Turn off the LCR meter and unplug the power lead.
     - Wait for 20 minutes or even over night until the last cap inside has
