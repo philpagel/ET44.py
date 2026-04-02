@@ -1,9 +1,10 @@
 # ET44xx/ET45xx firmware updater
 
 East Tester will provide firmware updates upon request, if begged persistently.
-They provide a Windows-only updater tool that depends on mscomm32 and the is
-pretty hard to get working. So I wrote this little script to conduct firmware
-updates on any OS.
+They provide a Windows-only updater tool in Chinese that depends on mscomm32
+and the is a PITA to get working. So I wrote this little script to conduct
+firmware updates on any OS and wiht less pain.
+
 
 ## Status
 
@@ -11,13 +12,13 @@ updates on any OS.
 
 I.e. I have successfully flashed an image to my ET4410 LCR meter using a PL2303
 USB-to-Serial adapter and this tool on LINUX. I'd be *very* gratefull for
-feedback by anyone who wav brave enought to give my tool a try.
+feedback by anyone who was brave enought to give my tool a try.
 
 #### Risk assessment
 
-* If something goes wrong, you may soft-brik your device
-* I consider the risk of hard-bricking to be non-existant because
-  Sendg a hexfile will preserve the bootloader any you should be able to 
+* If something goes wrong, you may soft-brick your device
+* I consider the risk of hard-bricking to be almost non-existant because
+  sending a hexfile will preserve the bootloader any you should be able to 
   bring your device back to live using the manufactireres tool but their tool
   is a major PITA. That's why my tool exists in the first place.
 
@@ -36,6 +37,8 @@ feedback by anyone who wav brave enought to give my tool a try.
 ./et44fwupdater.py -s /dev/ttyUSB0 V6.00.2522.079.hex   # LINUX
 ./et44fwupdater.py -s COM3 V6.00.2522.079.hex           # Windows
 ```
+   You man have to make it executlabe, first (`chmox a+x et44fwupdter.py`) or
+   call Python explicitly (`python et44fwupdater.py ...`)
 5. Turn *on* the meter
 6. Wait for firmware upload to finish
 7. When flash programming is done, the meter will automatically reset.
