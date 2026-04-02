@@ -26,20 +26,17 @@ feedback by anyone who was brave enought to give my tool a try.
 ## Firmware Upgrade Instructions
 
 1. Turn *off* the meter
-2. Connect meter to computer with RS232 cable. USB to serial cables are fine, but
-   you may need the appropriate drivers for them.  
-   Do not use a regular USB cable!  
-   Double-check that you connected to RS232 and *not to the handler port*.
+2. Connect the meter to your computer with a RS232 cable. USB to serial cables
+   are fine, but you may need the appropriate drivers for them.  Do not use a
+   regular USB cable!  Double-check that you connected to RS232 and *not to the
+   handler port*.
 3. Find the firmware file in the archive provided by the manufacturer. It has
-   the extension `.hex`. E.g. `V6.00.2522.079.hex`,
-   `V6.00.2423.059.hex` or something like that.
+   the extension `.hex`. E.g. `V6.00.2522.079.hex`, `V6.00.2423.059.hex` or
+   something like that.
 4. Start this tool. You may have to make it executable, first (`chmod a+x
-   et44fwupdater.py`) or call Python explicitly (`python3 et44fwupdater.py ...`)  
-   E.g.:
-```sh
-./et44fwupdater.py -s /dev/ttyUSB0 V6.00.2522.079.hex   # LINUX
-python3 et44fwupdater.py -s COM3 V6.00.2522.079.hex     # Windows
-```
+   et44fwupdater.py`) or call Python explicitly (`python3 et44fwupdater.py
+   ...`)  E.g.: ```sh ./et44fwupdater.py -s /dev/ttyUSB0 V6.00.2522.079.hex   #
+   LINUX python3 et44fwupdater.py -s COM3 V6.00.2522.079.hex     # Windows ```
 5. Turn *on* the meter
 6. Wait for firmware upload to finish
 7. When flash programming is done, the meter will automatically start the new
