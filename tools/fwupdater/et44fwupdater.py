@@ -25,10 +25,12 @@ def main():
     dev.reset_input_buffer()
     dev.reset_output_buffer()
 
-    trigger(dev)
-    bootloader(dev, 1)
+    trigger_bootloader(dev)
+    handle_menu(dev, 1)
     upload(dev, args.hexfile)
-    bootloader(dev, 2)
+    handle_response(dev)
+    handle_menu(dev, 2)
+    logger("Update finished. You may turn off the meter now.")
 
 
 def logger(*dat, end="\n", flush=True):
@@ -37,13 +39,10 @@ def logger(*dat, end="\n", flush=True):
         print(" ".join(dat), end=end, flush=flush)
 
 
-def trigger(dev):
+def trigger_bootloader(dev):
     "trigger bootloader"
 
     logger("Sending magic number. Please turn on the device now.")
-
-    dev.flush()
-    # send magic nubmer until we get into bootloader menu
     magic = bytes.fromhex("1b42543936057a")
     pos = 0
     inc = 1
@@ -67,81 +66,80 @@ def trigger(dev):
     logger()
 
 
-def bootloader(dev, item):
+def handle_menu(dev, item):
     "Wait for booloader menu and select item"
 
-    logger("Waiting for bootloader")
-    menucomplete = 0
+    menucomplete = False
+    selected = False
     while True:
         line = dev.readline().decode("gbk", errors="replace").rstrip()
         if len(line) > 0:
             logger(">", line)
         if "帮助" in line:  # "Help"
-            menucomplete = 1
+            menucomplete = True
         if "----------------------" in line and menucomplete:
             dev.write(f"{item}".encode("gbk"))  # select option 1: file upload
             logger(f"Selecting: [{item}].")
-        if "准备接收文件" in line:  # "Ready to receive file"
+            selected = True
+        if item == 1 and "准备接收文件" in line:  # "Ready to receive file"
             return
-
+        if item == 2 and selected:
+            time.sleep(0.5)
+            return
+        
 
 def upload(dev, hexfile):
     "upload hexfile"
 
-    try:
-        filesize = os.path.getsize(hexfile)
-    except:
-        sys.exit(f"Error: cannot open hexfile '{hexfile}'")
-    logger(f"Uploading '{hexfile}': {filesize} bytes")
+    with open(hexfile, "r") as infile:
+        lines = infile.read().splitlines()
+    numrows = len(lines)
 
-    try:
-        infile = open(hexfile, "r")
-    except:
-        sys.exit(f"Error: cannot open hexfile '{hexfile}'")
-
-    sent = 0
-    time.sleep(0.5)
-    dev.reset_input_buffer()
-    for lno, line in enumerate(infile, 1):
+    logger(f"Uploading '{hexfile}'")
+    # dev.reset_input_buffer()
+    for i, line in enumerate(lines, 1):
+        line += "\n"
         line = line.encode("ascii")
         dev.write(line)
         dev.flush()
         dev.reset_output_buffer()
-        sent += len(line)
-        percent = (sent / filesize) * 100
-        logger(f"\rProgress: {sent}/{filesize} bytes {percent:0.0f}%", end="")
+        percent = (i / numrows) * 100
+        logger(f"\rProgress: {i}/{numrows} rows {percent:0.0f}%", end="")
 
-        time.sleep(0.5)
-        timeout = time.time() + 5 # timeout 5 seconds
+        # wait for "." (ACK)
+        timeout = time.time() + 5
         while True:
             if time.time() > timeout:
                 sys.exit("ACK timeout")
+            time.sleep(0.0001)
             if dev.in_waiting:
                 x = dev.read(1)
                 if x == b".":  # ACK (".")
                     break
                 else:
-                    msg = x + dev.readline()
-                    msg = msg.decode("gbk", errors="replace")
-                    msg = msg.rstrip()
-                    logger("\n> " + msg)
-                if "空间溢出" in msg:
-                    sys.exit(f"Overflow in line: {lno}")
-                if "写入错误" in msg:
-                    sys.exit(f"Write Error in line: {lno}")
-                if "无效命令" in msg:
-                    sys.exit(f"Invalid command")
-                if msg.startswith("***") and msg.endswith("!"):
-                    sys.exit(f"Unknown Error '{msg}' in line: {lno}")
-            time.sleep(0.001)
-    infile.close()
-    logger()
+                    return
 
-    # keep reading output after upload
-    while line := dev.readline().decode("gbk", errors="replace").rstrip():
+
+def handle_response(dev):
+    "Keep reading and handle response"
+
+    t0 = time.time()
+    while True:
+        if time.time() > t0 + 2:
+            sys.exit("Timeout: no response from the device.")
+        line = dev.readline().decode("gbk", errors="replace").rstrip()
         if len(line) > 0:
             logger(">", line)
-        if "下载成功!" in line:  # "Download successful!"
+            t0 = time.time()  # extend dealine while data keeps coming
+        if "空间溢出" in line:
+            sys.exit(f"\nBuffer Overflow")
+        if "写入错误" in line:
+            sys.exit(f"\nWrite Error")
+        if "无效命令" in line:
+            sys.exit(f"\nInvalid command")
+        if line.startswith("***") and line.endswith("!"):
+            sys.exit(f"\nUnknown Error: '{line}'")
+        if "下载成功!" in line:
             logger("Upload finished.")
             break
 

@@ -1,9 +1,9 @@
 # ET44xx/ET45xx firmware updater
 
-East Tester will provide firmware updates upon request, if begged persistently.
-They provide a Windows-only updater tool in Chinese that depends on mscomm32
-and the is a PITA to get working. So I wrote this little script to conduct
-firmware updates on any OS and with less pain.
+East Tester will provide firmware updates if begged persistently.  They provide
+a Windows-only updater tool in Chinese that depends on mscomm32 and is a real
+PITA to get working. So I wrote this little script to conduct firmware updates
+on any OS and with less pain.
 
 
 ## Status
@@ -28,7 +28,8 @@ feedback by anyone who was brave enought to give my tool a try.
 1. Turn *off* the meter
 2. Connect meter to computer with RS232 cable. USB to serial cables are fine, but
    you may need the appropriate drivers for them.  
-   Do not use a regular USB cable!
+   Do not use a regular USB cable!  
+   Double-check that you connected to RS232 and *not to the handler port*.
 3. Find the firmware file in the archive provided by the manufacturer. It has
    the extension `.hex`. E.g. `V6.00.2522.079.hex`,
    `V6.00.2423.059.hex` or something like that.
@@ -37,11 +38,14 @@ feedback by anyone who was brave enought to give my tool a try.
    E.g.:
 ```sh
 ./et44fwupdater.py -s /dev/ttyUSB0 V6.00.2522.079.hex   # LINUX
-./et44fwupdater.py -s COM3 V6.00.2522.079.hex           # Windows
+python3 et44fwupdater.py -s COM3 V6.00.2522.079.hex     # Windows
 ```
 5. Turn *on* the meter
 6. Wait for firmware upload to finish
-7. When flash programming is done, the meter will automatically reset.
+7. When flash programming is done, the meter will automatically start the new
+   firmware.
+
+The entire process should take about 5 1/2 minutes.
 
 The bootloader is very temperamental: It can take several tries until it
 is successfully triggered.
@@ -50,9 +54,9 @@ is successfully triggered.
 # Example session
 
 ```
-❯ ./et44fwupdater.py images/V6.00.2423.059.hex
+❯ ./et44fwupdater.py images/ET44_V6.00.2611.089.hex
 Sending magic number. Please turn on the device now.
-     .
+         .
 > 杭州中创
 > Bootloader Ver:3.00
 > ----------------------
@@ -60,13 +64,21 @@ Sending magic number. Please turn on the device now.
 > [2]运行程序
 > [?]帮助
 > ----------------------
-Selecting: [1] File Upload.
+Selecting: [1].
 > 删除Flash...
 > >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 > 删除完成!
 > 准备接收文件...
-Uploading 'images/V6.00.2423.059.hex': 595113 bytes
-Progress: 595113/595113 bytes 100%
+Uploading 'images/ET44_V6.00.2611.089.hex'
+Progress: 13237/13237 rows 100%> 下载成功!
+Upload finished.
+> ----------------------
+> [1]下载程序
+> [2]运行程序
+> [?]帮助
+> ----------------------
+Selecting: [2].
+Update finished. You may turn off the meter now.
 ```
 
 Lines starting with `>` echo the output received from the device.
@@ -74,20 +86,21 @@ Lines starting with `>` echo the output received from the device.
 
 ## Usage 
 
-    usage: et44fwupdater.py [-h] [-s SERIALDEV] [-q] hexfile
+```
+usage: et44fwupdater.py [-h] [-s SERIALDEV] [-q] hexfile
 
-    Perform firmware update on an ET44xx/ET45xx LCR meters.
+ET44xx/ET45xx LCR-meter firmware update tool v0.1
 
-    positional arguments:
-      hexfile               path to hexfile, e.g. image.hex
+positional arguments:
+  hexfile               path to hexfile, e.g. image.hex
 
-    options:
-      -h, --help            show this help message and exit
-      -s, --serialdev SERIALDEV
-                            Serial device (default: /dev/ttyUSB1)
-      -q, --quiet           Run quietly without any output (default: False)
+options:
+  -h, --help            show this help message and exit
+  -s, --serialdev SERIALDEV
+                        Serial device (default: /dev/ttyUSB1)
+  -q, --quiet           Run quietly without any output (default: False)
+```
 
-If you find the tool too verbose, use the `-q/--quiet` flag.
 
 
 # Images
@@ -137,13 +150,15 @@ launch? Here are some things to check or do:
    if necessary.
 3. Double check that you are using the *correct* serial device (`COMx` port or
    `/dev/ttyUSBx`).
-4. Try again, several times if necessary.
+4. Double-check that your cable is plugged into the RS232 Port, not the handler
+   Port, which uses the same physical socket.
+5. Try again, several times if necessary.
     - Turn off the meter
     - Kill the updater program
     - Start over
-5. When turning the device on, do so swiftly. Sometimes when pressing the power
-   button slowly, things go wrong.
-6. Reset everything:
+6. When turning the device on, do so swiftly. Sometimes when pressing the power
+   button too slowly, triggering the bootloader fails.
+7. Reset everything:
     - Unplug the RS232 Cable from the computer. 
     - Maybe even reboot the computer.
     - Turn off the LCR meter and unplug the power lead.
