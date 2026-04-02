@@ -3,7 +3,7 @@
 East Tester will provide firmware updates upon request, if begged persistently.
 They provide a Windows-only updater tool in Chinese that depends on mscomm32
 and the is a PITA to get working. So I wrote this little script to conduct
-firmware updates on any OS and wiht less pain.
+firmware updates on any OS and with less pain.
 
 
 ## Status
@@ -18,9 +18,9 @@ feedback by anyone who was brave enought to give my tool a try.
 
 * If something goes wrong, you may soft-brick your device
 * I consider the risk of hard-bricking to be almost non-existant because
-  sending a hexfile will preserve the bootloader any you should be able to 
-  bring your device back to live using the manufactireres tool but their tool
-  is a major PITA. That's why my tool exists in the first place.
+  sending a hexfile will preserve the bootloader any you should be able to
+  bring your device back to live using this tool or the manufactureres tool (if
+  you can get that to work).
 
 
 ## Firmware Upgrade Instructions
@@ -32,13 +32,13 @@ feedback by anyone who was brave enought to give my tool a try.
 3. Find the firmware file in the archive provided by the manufacturer. It has
    the extension `.hex`. E.g. `V6.00.2522.079.hex`,
    `V6.00.2423.059.hex` or something like that.
-4. Start this tool. E.g.:
+4. Start this tool. You may have to make it executable, first (`chmod a+x
+   et44fwupdater.py`) or call Python explicitly (`python3 et44fwupdater.py ...`)  
+   E.g.:
 ```sh
 ./et44fwupdater.py -s /dev/ttyUSB0 V6.00.2522.079.hex   # LINUX
 ./et44fwupdater.py -s COM3 V6.00.2522.079.hex           # Windows
 ```
-   You man have to make it executlabe, first (`chmox a+x et44fwupdter.py`) or
-   call Python explicitly (`python et44fwupdater.py ...`)
 5. Turn *on* the meter
 6. Wait for firmware upload to finish
 7. When flash programming is done, the meter will automatically reset.
