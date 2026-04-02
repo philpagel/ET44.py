@@ -21,9 +21,14 @@ def main():
     except serial.serialutil.SerialException:
         sys.exit(f"Error: Cannot open serial device {args.serialdev}")
 
+    dev.flush()
+    dev.reset_input_buffer()
+    dev.reset_output_buffer()
+
     trigger(dev)
-    bootloader(dev)
+    bootloader(dev, 1)
     upload(dev, args.hexfile)
+    bootloader(dev, 2)
 
 
 def logger(*dat, end="\n", flush=True):
@@ -62,8 +67,8 @@ def trigger(dev):
     logger()
 
 
-def bootloader(dev):
-    "Wait for booloader menu and select upload"
+def bootloader(dev, item):
+    "Wait for booloader menu and select item"
 
     logger("Waiting for bootloader")
     menucomplete = 0
@@ -74,8 +79,8 @@ def bootloader(dev):
         if "帮助" in line:  # "Help"
             menucomplete = 1
         if "----------------------" in line and menucomplete:
-            dev.write("1".encode("gbk"))  # select option 1: file upload
-            logger("Selecting: [1] File Upload.")
+            dev.write(f"{item}".encode("gbk"))  # select option 1: file upload
+            logger(f"Selecting: [{item}].")
         if "准备接收文件" in line:  # "Ready to receive file"
             return
 
@@ -105,8 +110,8 @@ def upload(dev, hexfile):
         sent += len(line)
         percent = (sent / filesize) * 100
         logger(f"\rProgress: {sent}/{filesize} bytes {percent:0.0f}%", end="")
-        time.sleep(0.01)
 
+        time.sleep(0.5)
         timeout = time.time() + 5 # timeout 5 seconds
         while True:
             if time.time() > timeout:
@@ -119,11 +124,13 @@ def upload(dev, hexfile):
                     msg = x + dev.readline()
                     msg = msg.decode("gbk", errors="replace")
                     msg = msg.rstrip()
-                logger("\n> " + msg)
+                    logger("\n> " + msg)
                 if "空间溢出" in msg:
                     sys.exit(f"Overflow in line: {lno}")
                 if "写入错误" in msg:
                     sys.exit(f"Write Error in line: {lno}")
+                if "无效命令" in msg:
+                    sys.exit(f"Invalid command")
                 if msg.startswith("***") and msg.endswith("!"):
                     sys.exit(f"Unknown Error '{msg}' in line: {lno}")
             time.sleep(0.001)
@@ -131,23 +138,20 @@ def upload(dev, hexfile):
     logger()
 
     # keep reading output after upload
-    while True:
-        line = dev.readline().decode("gbk", errors="replace").rstrip()
+    while line := dev.readline().decode("gbk", errors="replace").rstrip():
         if len(line) > 0:
             logger(">", line)
         if "下载成功!" in line:  # "Download successful!"
             logger("Upload finished.")
-            logger("Wait for device to display 'Please Reset!' before cycling power.")
             break
 
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description="Perform firmware update on an ET44xx/ET45xx LCR meters.",
-        epilog="""Instructions: 1. Turn off the device and connect RS232 lead. 
-        2. Start this programm. 3. Turn on the device and wait for program to finish.
-        4. When display shows 'Please reset!', power cycle device.""",
+        description="ET44xx/ET45xx LCR-meter firmware update tool v0.1",
+        epilog="""1. Turn off the device and connect RS232 lead. 
+        2. Start this programm. 3. Turn on the device and wait until upload and programming are finished""",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
