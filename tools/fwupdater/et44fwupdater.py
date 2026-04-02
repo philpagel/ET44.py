@@ -117,6 +117,7 @@ def upload(dev, hexfile):
                 if x == b".":  # ACK (".")
                     break
                 else:
+                    logger()
                     return
 
 

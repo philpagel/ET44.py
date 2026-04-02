@@ -71,7 +71,8 @@ Selecting: [1].
 > 删除完成!
 > 准备接收文件...
 Uploading 'images/ET44_V6.00.2611.089.hex'
-Progress: 13237/13237 rows 100%> 下载成功!
+Progress: 13237/13237 rows 100%
+> 下载成功!
 Upload finished.
 > ----------------------
 > [1]下载程序
