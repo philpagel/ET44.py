@@ -11,8 +11,12 @@ on any OS and with less pain.
 [![works on my machine badge](https://cdn.jsdelivr.net/gh/nikku/works-on-my-machine@v0.4.0/badge.svg)](https://github.com/nikku/works-on-my-machine)
 
 I.e. I have successfully flashed an image to my ET4410 LCR meter using a PL2303
-USB-to-Serial adapter and this tool on LINUX. I'd be *very* grateful for
-feedback by anyone who was brave enough to give my tool a try.
+USB-to-Serial adapter and this tool on LINUX. User cbelcher2020 on the EEVblog Forum
+has successfully flashed his ET4510 on Windows using an FTDI USB-to-serial cable.
+
+I'd be *very* grateful for feedback by anyone who was brave enough to give my
+tool a try.
+
 
 #### Risk assessment
 
