@@ -1,6 +1,7 @@
 .venv/
 _material/
 *.swp
+*.lock
 __pycache__
 .pytest_cache
 .coverage

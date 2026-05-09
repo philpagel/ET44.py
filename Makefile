@@ -1,7 +1,7 @@
 help:
 	@echo "The following make targets are available:\n"
 	@echo "   test         run automated test suite. Requires device to be connected."
-	@echo "   build        build python package"
+	@echo "   build        build python package and firmware updater"
 	@echo "   clean        clean up package and cruft"
 .PHONEY: help
 
@@ -12,6 +12,7 @@ test:
 build: 
 	python3 -m build
 	make -C tools/fwupdater/ build
+	make -C tools/et44fwupdater/ build
 .PHONEY: build
 
 clean:
