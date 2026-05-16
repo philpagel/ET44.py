@@ -1,15 +1,9 @@
-help:
-	@echo "The following make targets are available:\n"
-	@echo "   build        build python package"
-	@echo "   clean        clean up package and cruft"
-.PHONEY: help
-
 build: 
-	python3 -m build
-.PHONEY: build
+	cargo build --release
+	cargo build --release --target x86_64-pc-windows-gnu
+	#cargo zigbuild --release --target aarch64-apple-darwin
 
 clean:
-	rm -rf dist
-	rm -rf ET44fwupdater.egg-info
-	rm -rf 
-.PHONEY: clean
+	cargo clean
+
+.PHONEY: build clean

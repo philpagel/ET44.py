@@ -1,22 +1,24 @@
 # ET44xx/ET45xx firmware updater
 
-East Tester will provide firmware images if begged persistently.  Their
-Windows-only updater tool is in Chinese, depends on mscomm32 and is a real
-PITA to get working. So I wrote my own tool for conducting firmware updates
-with less pain.
+East Tester will provide firmware updates if begged persistently.  They provide
+a Windows-only updater tool in Chinese that depends on mscomm32 and is a real
+PITA to get working. So I wrote this little script to conduct firmware updates
+on any OS and with less pain.
 
 
 ## Status
 
-[![works on my machine badge](https://cdn.jsdelivr.net/gh/nikku/works-on-my-machine@v0.4.0/badge.svg)](https://github.com/nikku/works-on-my-machine)
+**Deprecated!** 
+
+Please switch to reqritten version of the tool which is provided as binaries
+for recent releases. The Python script is no longer maintained and will be
+removed from future releases.
+
+-----
 
 I.e. I have successfully flashed an image to my ET4410 LCR meter using a PL2303
-USB-to-Serial adapter and this tool on LINUX.
-
-This is a re-write of my original Python script (with the help of AI).
-Providing a binary instead of a script should make it easier for
-non-programmers to run this without having to install any dependencies. I
-currently provide binaries for LINUX and WINDOWS.
+USB-to-Serial adapter and this tool on LINUX. User cbelcher2020 on the EEVblog Forum
+has successfully flashed his ET4510 on Windows using an FTDI USB-to-serial cable.
 
 I'd be *very* grateful for feedback by anyone who was brave enough to give my
 tool a try.
@@ -45,8 +47,8 @@ tool a try.
    You may have to make it executable, first (`chmod a+x et44fwupdater.py`) or
    call Python explicitly (`python3 et44fwupdater.py ...`)  E.g.: 
 ```sh
-   ./et44fwupdater -s /dev/ttyUSB0 images/ET44_V6.00.2611.089.hex   # LINUX 
-   .\et44fwupdater -s COM3 images\ET44_V6.00.2611.089.hex           # Windows 
+   ./et44fwupdater.py -s /dev/ttyUSB0 images/ET44_V6.00.2611.089.hex   # LINUX 
+   python3 et44fwupdater.py -s COM3 images/ET44_V6.00.2611.089.hex     # Windows 
 ```
 5. Turn *on* the meter  
    The meter's screen will stay black.  
@@ -64,16 +66,17 @@ is successfully triggered.
 # Example session
 
 ```
-❯ ./target/release/et44fwupdater -s /dev/ttyUSB1 images/ET44_V6.00.2611.089.hex
+❯ ./et44fwupdater.py images/ET44_V6.00.2611.089.hex
 Sending magic number. Please turn on the device now.
-.         
+         .
+> 杭州中创
+> Bootloader Ver:3.00
 > ----------------------
 > [1]下载程序
 > [2]运行程序
 > [?]帮助
 > ----------------------
 Selecting: [1].
-> *** 无效命令! 
 > 删除Flash...
 > >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 > 删除完成!
@@ -90,24 +93,25 @@ Upload finished.
 Selecting: [2].
 Update finished. You may turn off the meter now.
 ```
+
 Lines starting with `>` echo the output received from the device.
 
 
 ## Usage 
 
 ```
-ET44xx / ET45xx LCR meter firmware updater
+usage: et44fwupdater.py [-h] [-s SERIALDEV] [-q] hexfile
 
-Usage: et44fwupdater [OPTIONS] <HEXFILE>
+ET44xx/ET45xx LCR-meter firmware update tool v0.1
 
-Arguments:
-  <HEXFILE>  Firmware hex file
+positional arguments:
+  hexfile               path to hexfile, e.g. image.hex
 
-Options:
-  -s, --serialdev <SERIALDEV>  Serial device / COM port [default: /dev/ttyUSB0]
-  -q, --quiet                  Suppress console output
-  -h, --help                   Print help
-  -V, --version                Print version
+options:
+  -h, --help            show this help message and exit
+  -s, --serialdev SERIALDEV
+                        Serial device (default: /dev/ttyUSB1)
+  -q, --quiet           Run quietly without any output (default: False)
 ```
 
 
@@ -123,10 +127,40 @@ I have a few firmware images that I found online and/or got from the manufacture
 
 # Installation
 
-Download a binary from the latest release. No installation required. On
-Linux, make sure to make the binary executable
+In addition to this script, you need
 
-    chmod a+x et44fwupdater
+* A shell (bash, zsh, PowerShell, cmd, ...)
+* A working Python3 installation
+* Ideally `pipx`
+
+You can install this programm via `pip` or just copy it to a folder of oyur
+choice, but then you need to make sure, that `pyserial` ist installed as well.
+
+The easiest way to install this is to use [pipx](https://github.com/pypa/pipx).
+Download the `et44fwupdater-0.1-py3-none-any.whl` or `et44fwupdater-0.1.tar.gz`
+form the latest [release](https://github.com/philpagel/ET44.py/releases) and
+install it like this:
+
+```
+pipx install et44fwupdater-0.1.tar.gz
+
+# or
+
+pipx install et44fwupdater-0.1-py3-none-any.whl
+```
+
+Alternatively, you can install it with `pip`
+
+```
+python -m pip install et44fwupdater-0.1.tar.gz
+
+# or
+
+python -m pip install et44fwupdater-0.1-py3-none-any.whl
+```
+
+You may need to create a virtual enviroment first. If you don't know what that
+is, use `pipx` and thank me later.
 
 
 # Trouble shooting
