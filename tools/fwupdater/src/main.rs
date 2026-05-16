@@ -3,6 +3,7 @@
 use anyhow::{bail, Context, Result};
 use clap::Parser;
 use serialport::SerialPort;
+use encoding_rs::GBK;
 use std::{
     fs,
     io::{Read, Write},
@@ -10,7 +11,6 @@ use std::{
     time::{Duration, Instant},
 };
 
-const MAGIC: &[u8] = &[0x1b, 0x42, 0x54, 0x39, 0x36, 0x05, 0x7a];
 
 #[derive(Parser, Debug)]
 #[command(
@@ -39,7 +39,7 @@ fn default_serial_port() -> &'static str {
 
     #[cfg(not(windows))]
     {
-        "/dev/ttyUSB1"
+        "/dev/ttyUSB0"
     }
 }
 
@@ -75,7 +75,7 @@ fn main() -> Result<()> {
         .open()
         .with_context(|| format!("Cannot open serial device {}", args.serialdev))?;
 
-    clear_buffers(&mut *port)?;
+    port.clear(serialport::ClearBuffer::All)?;
 
     trigger_bootloader(&mut *port, &logger)?;
     handle_menu(&mut *port, 1, &logger)?;
@@ -88,14 +88,10 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn clear_buffers(port: &mut dyn SerialPort) -> Result<()> {
-    port.clear(serialport::ClearBuffer::All)?;
-    Ok(())
-}
-
 fn trigger_bootloader(port: &mut dyn SerialPort, logger: &Logger) -> Result<()> {
     logger.log("Sending magic number. Please turn on the device now.");
 
+    const MAGIC: &[u8] = &[0x1b, 0x42, 0x54, 0x39, 0x36, 0x05, 0x7a];
     let mut pos = 0usize;
     let mut dir: isize = 1;
 
@@ -108,7 +104,7 @@ fn trigger_bootloader(port: &mut dyn SerialPort, logger: &Logger) -> Result<()> 
         port.write_all(MAGIC)?;
         port.flush()?;
 
-        thread::sleep(Duration::from_millis(100));
+        thread::sleep(Duration::from_millis(70));
 
         let waiting = port.bytes_to_read()?;
         if waiting > 0 {
@@ -196,8 +192,9 @@ fn upload_firmware(
             total,
             percent
         ));
-
-        wait_for_ack(port)?;
+        if index + 1 < total {
+            wait_for_ack(port)?;
+        }
     }
 
     logger.log("");
@@ -295,5 +292,8 @@ fn read_line(port: &mut dyn SerialPort) -> Result<String> {
         }
     }
 
-    Ok(String::from_utf8_lossy(&buffer).trim().to_string())
+    let (decoded_cow, _encoding, _errors) = GBK.decode(&buffer);
+    let buffer: String = decoded_cow.into_owned();
+
+    Ok(buffer)
 }
