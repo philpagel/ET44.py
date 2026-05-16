@@ -8,7 +8,13 @@ on any OS and with less pain.
 
 ## Status
 
-[![works on my machine badge](https://cdn.jsdelivr.net/gh/nikku/works-on-my-machine@v0.4.0/badge.svg)](https://github.com/nikku/works-on-my-machine)
+**Deprecated!** 
+
+Please switch to reqritten version of the tool which is provided as binaries
+for recent releases. The Python script is no longer maintained and will be
+removed from future releases.
+
+-----
 
 I.e. I have successfully flashed an image to my ET4410 LCR meter using a PL2303
 USB-to-Serial adapter and this tool on LINUX. User cbelcher2020 on the EEVblog Forum
