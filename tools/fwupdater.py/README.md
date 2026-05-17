@@ -10,7 +10,7 @@ on any OS and with less pain.
 
 **Deprecated!** 
 
-Please switch to reqritten version of the tool which is provided as binaries
+Please switch to rewritten version of the tool which is provided as binaries
 for recent releases. The Python script is no longer maintained and will be
 removed from future releases.
 

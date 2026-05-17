@@ -12,7 +12,6 @@ test:
 build: 
 	python3 -m build
 	make -C tools/fwupdater/ build
-	make -C tools/et44fwupdater/ build
 .PHONEY: build
 
 clean:

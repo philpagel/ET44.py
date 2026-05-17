@@ -42,11 +42,10 @@ tool a try.
    the extension `.hex`. E.g. `V6.00.2522.079.hex`, `V6.00.2423.059.hex` or
    something like that.
 4. Start this tool.  
-   You may have to make it executable, first (`chmod a+x et44fwupdater.py`) or
-   call Python explicitly (`python3 et44fwupdater.py ...`)  E.g.: 
+   You may have to make it executable, first (`chmod a+x et44fwupdater`)
 ```sh
    ./et44fwupdater -s /dev/ttyUSB0 images/ET44_V6.00.2611.089.hex   # LINUX 
-   .\et44fwupdater -s COM3 images\ET44_V6.00.2611.089.hex           # Windows 
+   .\et44fwupdater.exe -s COM3 images\ET44_V6.00.2611.089.hex       # Windows 
 ```
 5. Turn *on* the meter  
    The meter's screen will stay black.  
@@ -66,14 +65,15 @@ is successfully triggered.
 ```
 ❯ ./target/release/et44fwupdater -s /dev/ttyUSB1 images/ET44_V6.00.2611.089.hex
 Sending magic number. Please turn on the device now.
-.         
+ .        
+> 杭州中创
+> Bootloader Ver:3.00
 > ----------------------
 > [1]下载程序
 > [2]运行程序
 > [?]帮助
 > ----------------------
 Selecting: [1].
-> *** 无效命令! 
 > 删除Flash...
 > >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 > 删除完成!
@@ -88,8 +88,8 @@ Upload finished.
 > [?]帮助
 > ----------------------
 Selecting: [2].
-Update finished. You may turn off the meter now.
 ```
+
 Lines starting with `>` echo the output received from the device.
 
 
