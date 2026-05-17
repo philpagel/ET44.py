@@ -63,7 +63,7 @@ is successfully triggered.
 # Example session
 
 ```
-❯ ./target/release/et44fwupdater -s /dev/ttyUSB1 images/ET44_V6.00.2611.089.hex
+❯ ./et44fwupdater -s /dev/ttyUSB1 images/ET44_V6.00.2611.089.hex
 Sending magic number. Please turn on the device now.
  .        
 > 杭州中创
@@ -105,6 +105,7 @@ Arguments:
 
 Options:
   -s, --serialdev <SERIALDEV>  Serial device / COM port [default: /dev/ttyUSB0]
+  -b, --baudrate <BAUDRATE>    baud rate [default: 19200]
   -q, --quiet                  Suppress console output
   -h, --help                   Print help
   -V, --version                Print version
@@ -123,7 +124,7 @@ I have a few firmware images that I found online and/or got from the manufacture
 
 # Installation
 
-Download a binary from the latest release. No installation required. On
+Download a binary from the [latest release](https://github.com/philpagel/ET44.py/releases/latest). No installation required. On
 Linux, make sure to make the binary executable
 
     chmod a+x et44fwupdater

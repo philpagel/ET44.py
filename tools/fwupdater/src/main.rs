@@ -22,6 +22,10 @@ struct Args {
     /// Serial device / COM port
     #[arg(short, long, default_value = default_serial_port())]
     serialdev: String,
+    
+    /// baud rate
+    #[arg(short, long, default_value = "19200")]
+    baudrate: u32,
 
     /// Suppress console output
     #[arg(short, long)]
@@ -70,7 +74,7 @@ fn main() -> Result<()> {
     let args = Args::parse();
     let logger = Logger::new(args.quiet);
 
-    let mut port = serialport::new(&args.serialdev, 19200)
+    let mut port = serialport::new(&args.serialdev, args.baudrate)
         .timeout(Duration::from_millis(100))
         .open()
         .with_context(|| format!("Cannot open serial device {}", args.serialdev))?;
