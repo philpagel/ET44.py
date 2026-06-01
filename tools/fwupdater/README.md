@@ -31,6 +31,15 @@ tool a try.
   you can get that to work).
 
 
+# Installation
+
+Download a binary from the [latest
+release](https://github.com/philpagel/ET44.py/releases/latest). No installation
+required. On Linux, make sure to make the binary executable
+
+    chmod a+x et44fwupdater
+
+
 ## Firmware Upgrade Instructions
 
 1. Turn *off* the meter
@@ -120,14 +129,6 @@ I have a few firmware images that I found online and/or got from the manufacture
 * [`V6.00.2423.059.hex`](./images/ET44_V6.00.2423.059.hex)
 * [`V6.00.2522.079.hex`](./images/ET44_V6.00.2522.079.hex)
 * [`V6.00.2611.089.hex`](./images/ET44_V6.00.2611.089.hex)
-
-
-# Installation
-
-Download a binary from the [latest release](https://github.com/philpagel/ET44.py/releases/latest). No installation required. On
-Linux, make sure to make the binary executable
-
-    chmod a+x et44fwupdater
 
 
 # Trouble shooting
