@@ -8,3 +8,6 @@ __pycache__
 _*/
 dist/
 *.egg-info
+Cargo.lock
+target
+debug
