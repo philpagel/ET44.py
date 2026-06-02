@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name="ET44"
-version="0.5"
+version="0.6.1"
 description="Remote controlling East-Tester ET44/ET45 series lcr meters"
 dependencies= [
    "pyvisa",
