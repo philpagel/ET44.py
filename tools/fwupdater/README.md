@@ -31,7 +31,7 @@ tool a try.
   you can get that to work).
 
 
-# Installation
+## Installation
 
 Download a binary from the [latest
 release](https://github.com/philpagel/ET44.py/releases/latest). No installation
@@ -74,6 +74,7 @@ is successfully triggered.
 
 ```
 ❯ ./et44fwupdater -s /dev/ttyUSB1 images/ET44_V6.00.2611.089.hex
+Sanity checking hexfile
 Sending magic number. Please turn on the device now.
  .        
 > 杭州中创
