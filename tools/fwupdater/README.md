@@ -49,9 +49,10 @@ required. On Linux, make sure to make the binary executable
    and *not to the handler port*.
 3. Find the firmware file in the archive provided by the manufacturer. It has
    the extension `.hex`. E.g. `V6.00.2522.079.hex`, `V6.00.2423.059.hex` or
-   something like that.
-4. Start this tool.  
-   You may have to make it executable, first (`chmod a+x et44fwupdater`)
+   something like that. I also have a few images in the [images](images/)
+   folder.
+4. Open a terminal/shell and run this tool.  
+   On LINUX, you may have to make it executable, first (`chmod a+x et44fwupdater`).
 ```sh
    ./et44fwupdater -s /dev/ttyUSB0 images/ET44_V6.00.2611.089.hex   # LINUX 
    .\et44fwupdater.exe -s COM3 images\ET44_V6.00.2611.089.hex       # Windows 
@@ -120,15 +121,6 @@ Options:
   -V, --version                Print version
 ```
 
-
-
-# Images
-
-I have a few firmware images that I found online and/or got from the manufacturer:
-
-* [`V6.00.2423.059.hex`](./images/ET44_V6.00.2423.059.hex)
-* [`V6.00.2522.079.hex`](./images/ET44_V6.00.2522.079.hex)
-* [`V6.00.2611.089.hex`](./images/ET44_V6.00.2611.089.hex)
 
 
 # Trouble shooting
