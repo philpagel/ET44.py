@@ -34,8 +34,9 @@ tool a try.
 ## Installation
 
 Download a binary from the [latest
-release](https://github.com/philpagel/ET44.py/releases/latest). No installation
-required. On Linux, make sure to make the binary executable
+release](https://github.com/philpagel/ET44.py/releases/latest) and unpack the
+archive. No installation required. On Linux and MacOS, make sure to make the
+binary executable, first:
 
     chmod a+x et44fwupdater
 
