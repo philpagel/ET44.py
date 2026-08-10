@@ -18,18 +18,6 @@ Providing a binary instead of a script should make it easier for
 non-programmers to run this without having to install any dependencies. I
 currently provide binaries for LINUX and WINDOWS.
 
-I'd be *very* grateful for feedback by anyone who was brave enough to give my
-tool a try.
-
-
-#### Risk assessment
-
-* If something goes wrong, you may soft-brick your device
-* I consider the risk of hard-bricking to be almost zero because
-  sending a hexfile will preserve the bootloader and you should be able to
-  bring your device back to live using this tool or the manufacturer's tool (if
-  you can get that to work).
-
 
 ## Installation
 
