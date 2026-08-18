@@ -112,10 +112,11 @@ fn trigger_bootloader(port: &mut dyn SerialPort, logger: &Logger) -> Result<()> 
         port.write_all(MAGIC)?;
         port.flush()?;
 
-        thread::sleep(Duration::from_millis(70));
+        thread::sleep(Duration::from_millis(50));
 
         let waiting = port.bytes_to_read()?;
         if waiting > 0 {
+            thread::sleep(Duration::from_millis(50));
             break;
         }
 

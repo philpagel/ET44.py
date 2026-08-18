@@ -55,7 +55,7 @@ binary executable, first:
 
 The entire process will take about 5 1/2 minutes.
 
-The bootloader is very temperamental: It may take several attempts until it
+The bootloader can be a bit temperamental: It may take several attempts until it
 is successfully triggered.
 
 
