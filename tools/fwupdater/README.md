@@ -11,12 +11,13 @@ with less pain.
 [![works on my machine badge](https://cdn.jsdelivr.net/gh/nikku/works-on-my-machine@v0.4.0/badge.svg)](https://github.com/nikku/works-on-my-machine)
 
 I.e. I can reliably flash my ET4410 LCR meter using a PL2303 USB-to-Serial
-adapter and this tool on LINUX.
+adapter and this tool on LINUX. Some other people have used it successfully on
+Windows. 
 
 This is a re-write of my original Python script (with the help of AI).
 Providing a binary instead of a script should make it easier for
 non-programmers to run this without having to install any dependencies. I
-currently provide binaries for LINUX and WINDOWS.
+currently provide binaries for LINUX, WINDOWS and MacOS.
 
 
 ## Installation
@@ -118,15 +119,28 @@ What to do if things don't work/go wrong and/or you have soft-bricked your
 device and/or the update ends in an error message and/or the bootloader will not
 launch? Here are some things to check or do:
 
-### The tool cannot connect ot the meter
+### The tool cannot connect to the meter
 
 1. Double check that you are using the *correct* serial device (`COMx` port or
-   `/dev/ttyUSBx`).
+   `/dev/ttyUSBx`). If you are using a USB2serial cable, check the available
+   devices before and after plugging in the device (and turning it on).
+```
+    # LINUX
+    ls -l /dev/ttyUSB* /dev/ttyACM* /dev/ttyS*
+    
+    # Windows cmd
+    wmic path Win32_SerialPort get DeviceID,Name,Description
+
+    # Windows PowerShell
+    [System.IO.Ports.SerialPort]::GetPortNames()
+
+    # MacOS
+    ls -l /dev/cu.*
+```
 2. Make sure your USB-to-serial cable is supported by your OS. Install drivers
    if necessary.
 3. Double-check that your cable is plugged into the RS232 port, not the
    handler port, which uses the same physical socket.
-
 
 ### The tool hangs or exits with a cryptic error message
 
